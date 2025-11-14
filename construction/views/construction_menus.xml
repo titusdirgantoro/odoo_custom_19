@@ -1,0 +1,205 @@
+
+<odoo>
+    <data>
+
+        <menuitem
+            id="menu_construction_root"
+            name="Construction"
+            sequence="30"
+            />
+
+        <record id="action_construction_project_task" model="ir.actions.act_window">
+            <field name="name">Projects</field>
+            <field name="res_model">project.task</field>
+            <field name="view_mode">list,form</field>
+            <field name="help" type="html">
+                <p>
+                    Daftar task proyek untuk kebutuhan Construction.
+                </p>
+            </field>
+        </record>
+
+        <menuitem
+            id="menu_construction_project"
+            name="Project"
+            parent="menu_construction_root"
+            action="action_construction_project_task"
+            sequence="10"
+        />
+
+        <menuitem
+            id="menu_construction_configuration"
+            name="Configuration"
+            parent="menu_construction_root"
+            sequence="99"
+        />
+
+        <record id="action_construction_stock_warehouse" model="ir.actions.act_window">
+            <field name="name">Gudang</field>
+            <field name="res_model">stock.warehouse</field>
+            <field name="view_mode">list,form</field>
+        </record>
+
+        <menuitem
+            id="menu_construction_config_warehouse"
+            name="Gudang"
+            parent="menu_construction_configuration"
+            action="action_construction_stock_warehouse"
+            sequence="10"
+        />
+
+        <!-- Location (stock.location) -->
+        <record id="action_construction_stock_location" model="ir.actions.act_window">
+            <field name="name">Lokasi Gudang</field>
+            <field name="res_model">stock.location</field>
+            <field name="view_mode">list,form</field>
+            <!-- optional: domain untuk exclude view-only locations
+            <field name="domain">[('usage', '!=', 'view')]</field>
+            -->
+        </record>
+
+        <menuitem
+            id="menu_construction_config_location"
+            name="Lokasi"
+            parent="menu_construction_configuration"
+            action="action_construction_stock_location"
+            sequence="20"
+        />
+
+        <menuitem
+            id="menu_construction_products_root"
+            name="Products"
+            parent="menu_construction_root"
+            sequence="30"
+        />
+
+        <record id="action_construction_product_bahan" model="ir.actions.act_window">
+            <field name="name">Produk Bahan</field>
+            <field name="res_model">product.product</field>
+            <field name="view_mode">list,form</field>
+            <field name="domain">[('type_master_data', '=', 'bahan')]</field>
+            <field name="context">
+                {'default_type_master_data': 'bahan'}
+            </field>
+        </record>
+
+        <menuitem
+            id="menu_construction_product_bahan"
+            name="Produk Bahan"
+            parent="menu_construction_products_root"
+            action="action_construction_product_bahan"
+            sequence="10"
+        />
+
+        <record id="action_construction_product_upah" model="ir.actions.act_window">
+            <field name="name">Produk Upah</field>
+            <field name="res_model">product.product</field>
+            <field name="view_mode">list,form</field>
+            <field name="domain">[('type_master_data', '=', 'upah')]</field>
+            <field name="context">
+                {'default_type_master_data': 'upah'}
+            </field>
+        </record>
+
+        <menuitem
+            id="menu_construction_product_upah"
+            name="Produk Upah"
+            parent="menu_construction_products_root"
+            action="action_construction_product_upah"
+            sequence="20"
+        />
+
+        <!-- Produk Overhead -->
+        <record id="action_construction_product_overhead" model="ir.actions.act_window">
+            <field name="name">Product Overhead</field>
+            <field name="res_model">product.product</field>
+            <field name="view_mode">list,form</field>
+            <field name="domain">[('type_master_data', '=', 'overhead')]</field>
+            <field name="context">
+                {'default_type_master_data': 'overhead'}
+            </field>
+        </record>
+
+        <menuitem
+            id="menu_construction_product_overhead"
+            name="Product Overhead"
+            parent="menu_construction_products_root"
+            action="action_construction_product_overhead"
+            sequence="30"
+        />
+
+        <!-- Produk Jasa -->
+        <record id="action_construction_product_jasa" model="ir.actions.act_window">
+            <field name="name">Product Jasa</field>
+            <field name="res_model">product.product</field>
+            <field name="view_mode">list,form</field>
+            <field name="domain">[('type_master_data', '=', 'jasa')]</field>
+            <field name="context">
+                {'default_type_master_data': 'jasa'}
+            </field>
+        </record>
+
+        <menuitem
+            id="menu_construction_product_jasa"
+            name="Product Jasa"
+            parent="menu_construction_products_root"
+            action="action_construction_product_jasa"
+            sequence="40"
+        />
+
+        <record id="action_construction_product_sewa_alat" model="ir.actions.act_window">
+            <field name="name">Product Sewa Alat</field>
+            <field name="res_model">product.product</field>
+            <field name="view_mode">list,form</field>
+            <field name="domain">[('type_master_data', '=', 'sewa_alat')]</field>
+            <field name="context">
+                {'default_type_master_data': 'sewa_alat'}
+            </field>
+        </record>
+
+        <menuitem
+            id="menu_construction_product_sewa_alat"
+            name="Product Sewa Alat"
+            parent="menu_construction_products_root"
+            action="action_construction_product_sewa_alat"
+            sequence="50"
+        />
+
+        <record id="action_construction_hr_employee" model="ir.actions.act_window">
+            <field name="name">Employees</field>
+            <field name="res_model">hr.employee</field>
+            <field name="view_mode">list,form</field>
+            <field name="domain">[('active', '=', True)]</field>
+        </record>
+
+        <menuitem
+            id="menu_construction_employee"
+            name="Employee"
+            parent="menu_construction_root"
+            action="action_construction_hr_employee"
+            sequence="40"
+        />
+
+        <record id="action_construction_suppliers" model="ir.actions.act_window">
+            <field name="name">Pemasok</field>
+            <field name="res_model">res.partner</field>
+            <field name="view_mode">list,form</field>
+            <field name="domain">[('supplier_rank', '>', 0)]</field>
+            <field name="context">
+                {
+                    'default_company_type': 'company',
+                    'default_supplier_rank': 1
+                }
+            </field>
+        </record>
+
+        <menuitem
+            id="menu_construction_suppliers"
+            name="Pemasok"
+            parent="menu_construction_root"
+            action="action_construction_suppliers"
+            sequence="50"
+        />
+
+    </data>
+</odoo>
