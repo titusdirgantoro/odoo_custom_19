@@ -1,0 +1,8 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_res_kantor_user,res.kantor user,model_res_kantor,base.group_user,1,1,1,1
+access_kelompok_proyek_user,kelompok.proyek user,model_kelompok_proyek,base.group_user,1,1,1,1
+access_res_bidang_user,res.bidang user,model_res_bidang,base.group_user,1,1,1,1
+access_res_sub_bidang_user,res.sub.bidang user,model_res_sub_bidang,base.group_user,1,1,1,1
+access_status_proyek_user,status.proyek user,model_status_proyek,base.group_user,1,1,1,1
+access_supplier_category_user,supplier.category user,model_supplier_category,base.group_user,1,1,1,1
+access_supplier_service_user,supplier.service user,model_supplier_service,base.group_user,1,1,1,1

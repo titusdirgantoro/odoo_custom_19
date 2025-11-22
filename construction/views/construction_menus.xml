@@ -1,6 +1,7 @@
 
 <odoo>
     <data>
+        
 
         <menuitem
             id="menu_construction_root"
@@ -9,11 +10,28 @@
             sequence="30"
             />
 
+        <record id="open_view_project_all_cons" model="ir.actions.act_window">
+            <field name="name">Projects</field>
+            <field name="res_model">project.project</field>
+            <field name="domain">[("is_template", "=", False)]</field>
+            <field name="context">{'display_milestone_deadline': True}</field>
+            <field name="view_mode">list,form</field>
+            <field name="search_view_id" ref="project.view_project_project_filter"/>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No projects found. Let's create one!
+                </p>
+                <p>
+                    Create projects to organize your tasks. Define a different workflow for each project.
+                </p>
+            </field>
+        </record>
+
         <menuitem
             id="menu_construction_project"
             name="Project"
             parent="menu_construction_root"
-            action="project.open_view_project_all"
+            action="open_view_project_all_cons"
             sequence="10"
         />
 
@@ -43,9 +61,6 @@
             <field name="name">Lokasi Gudang</field>
             <field name="res_model">stock.location</field>
             <field name="view_mode">list,form</field>
-            <!-- optional: domain untuk exclude view-only locations
-            <field name="domain">[('usage', '!=', 'view')]</field>
-            -->
         </record>
 
         <menuitem
@@ -190,6 +205,24 @@
             action="action_construction_suppliers"
             sequence="50"
         />
+
+        <menuitem id="menu_res_kantor" parent="menu_construction_configuration" action="construction.action_res_kantor" sequence="30"/>
+        <menuitem id="menu_kelompok_proyek" parent="menu_construction_configuration" action="construction.action_kelompok_proyek" sequence="35"/>
+        <menuitem id="menu_res_bidang" parent="menu_construction_configuration" action="construction.action_res_bidang" sequence="40"/>
+        <menuitem id="menu_res_sub_bidang" parent="menu_construction_configuration" action="construction.action_res_sub_bidang" sequence="45"/>
+        <menuitem id="menu_status_proyek" parent="menu_construction_configuration" action="construction.action_status_proyek" sequence="50"/>
+
+        <menuitem id="menu_supplier_category"
+              name="Kategori Pemasok"
+              parent="menu_construction_configuration"
+              action="construction.action_supplier_category"
+              sequence="55"/>
+
+        <menuitem id="menu_supplier_service"
+                name="Layanan Pemasok"
+                parent="menu_construction_configuration"
+                action="construction.action_supplier_service"
+                sequence="60"/>
 
     </data>
 </odoo>

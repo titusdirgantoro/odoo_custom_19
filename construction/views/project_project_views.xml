@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="inherit_edit_project" model="ir.ui.view">
+        <field name="name">project.project.view.form.inherit</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.edit_project"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='description']" position="after">
+
+                <!-- ===================== -->
+                <!-- PAGE: Data Umum Proyek -->
+                <!-- ===================== -->
+                <page string="Data Umum Proyek">
+                    <group>
+                        <group>
+                            <field name="kantor_id"/>
+                            <field name="department_id"/>
+                            <field name="kelompok_proyek_id"/>
+                            <field name="bidang_id"/>
+                            <field name="sub_bidang_id"/>
+                        </group>
+                        <group>
+                            <field name="kode_project"/>
+                            <field name="status_mitra"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="uraian_proyek" colspan="4"/>
+                    </group>
+                </page>
+
+                <!-- ===================== -->
+                <!-- PAGE: Data Kontrak    -->
+                <!-- ===================== -->
+                <page string="Data Kontrak">
+                    <group>
+                        <group>
+                            <field name="no_sppbj"/>
+                            <field name="tgl_sppbj"/>
+                            <field name="tgl_pra_kontrak"/>
+                            <field name="tgl_mulai_kontrak"/>
+                        </group>
+                        <group>
+                            <field name="tgl_selesai_kontrak"/>
+                            <field name="waktu_kontrak_hari"/>
+                            <field name="pho"/>
+                            <field name="tgl_fho"/>
+                        </group>
+                    </group>
+                    <group string="Pemeliharaan">
+                        <group>
+                            <field name="tgl_selesai_pemeliharaan"/>
+                            <field name="waktu_pemeliharaan_hari"/>
+                        </group>
+                    </group>
+                </page>
+
+                <!-- ===================== -->
+                <!-- PAGE: Data Schedule   -->
+                <!-- ===================== -->
+                <page string="Data Schedule">
+                    <group>
+                        <group>
+                            <field name="tgl_mulai_schedule"/>
+                            <field name="tgl_selesai_schedule"/>
+                        </group>
+                        <group>
+                            <!-- di Python field waktu_pemeliharaan_hari dipakai
+                                 untuk 2 label (Hari &amp; Minggu) -->
+                            <field name="waktu_pemeliharaan_hari"/>
+                            <field name="waktu_pemeliharaan_hari"/>
+                        </group>
+                    </group>
+                </page>
+
+                <!-- ============================= -->
+                <!-- PAGE: Data Lokasi &amp; Kontrak  -->
+                <!-- ============================= -->
+                <page string="Data Lokasi &amp; Kontrak">
+                    <group string="Kontrak">
+                        <group>
+                            <field name="nomor_kontrak"/>
+                            <field name="tgl_kontrak"/>
+                        </group>
+                    </group>
+                    <group string="Lokasi">
+                        <group>
+                            <field name="lokasi_proyek"/>
+                            <field name="kota_proyek"/>
+                            <field name="propinsi_proyek"/>
+                        </group>
+                        <group>
+                            <field name="pm_proyek_id"/>
+                        </group>
+                    </group>
+                </page>
+
+                <!-- ===================== -->
+                <!-- PAGE: Data Keuangan  -->
+                <!-- ===================== -->
+                <page string="Data Keuangan">
+                    <group>
+                        <group>
+                            <field name="nilai_kontrak"/>
+                            <field name="currecy_id"/>
+                            <field name="target_rap"/>
+                        </group>
+                        <group>
+                            <field name="nilai_pekerjaan_rap"/>
+                            <field name="nilai_pekerjaan_kontrak"/>
+                            <field name="status_proyek_id"/>
+                        </group>
+                    </group>
+                    <group string="Jasa &amp; Pajak">
+                        <group>
+                            <field name="nilai_jasa"/>
+                            <field name="ppn_dipotong"/>
+                            <field name="potongan_pph"/>
+                        </group>
+                    </group>
+                    <group string="Pengguna Jasa">
+                        <group>
+                            <field name="pengguna_jasa"/>
+                        </group>
+                        <group>
+                            <field name="alamat_pengguna_jasa" colspan="4"/>
+                        </group>
+                    </group>
+                </page>
+
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

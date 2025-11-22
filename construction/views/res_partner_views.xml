@@ -1,0 +1,119 @@
+<odoo>
+
+    <record id="view_res_partner_form_supplier" model="ir.ui.view">
+        <field name="name">res.partner.form.supplier.inherit</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+
+            <!-- Tambahkan page-page baru setelah tab contact_addresses bawaan Odoo -->
+            <xpath expr="//page[@name='contact_addresses']" position="after">
+
+                <!-- ========================= -->
+                <!-- A. Identitas Pemasok     -->
+                <!-- ========================= -->
+                <page string="Identitas Pemasok">
+                    <group>
+                        <group>
+                            <field name="kode_pemasok"/>
+                            <field name="status_pemasok"/>
+                            <field name="blacklist_status"/>
+                        </group>
+                        <group>
+                            <field name="kategori_pemasok_ids" widget="many2many_tags"/>
+                            <field name="layanan_id"/>
+                        </group>
+                    </group>
+                </page>
+
+                <!-- ========================= -->
+                <!-- B. Data Keuangan         -->
+                <!-- ========================= -->
+                <page string="Data Keuangan">
+                    <group>
+                        <group>
+                            <field name="no_pkp"/>
+                            <field name="no_fp"/>
+                            <field name="harus_ppn"/>
+                        </group>
+                        <group>
+                            <field name="npwp"/>
+                            <field name="npwp16"/>
+                            <field name="ktp"/>
+                        </group>
+                    </group>
+                </page>
+
+                <!-- ========================= -->
+                <!-- C. Alamat & Lokasi       -->
+                <!-- ========================= -->
+                <page string="Data Alamat &amp; Lokasi">
+                    <group>
+                        <group>
+                            <!-- alamat_1, kode_pos, kabupaten/kota -->
+                            <field name="street"/>
+                            <field name="zip"/>
+                            <field name="city"/>
+                        </group>
+                        <group>
+                            <!-- provinsi, negara -->
+                            <field name="state_id"/>
+                            <field name="country_id"/>
+                        </group>
+                    </group>
+                </page>
+
+                <!-- ========================= -->
+                <!-- D. Data Kontak           -->
+                <!-- ========================= -->
+                <page string="Data Kontak">
+                    <group>
+                        <group>
+                            <field name="phone"/>
+                            <field name="nomor_fax"/>
+                        </group>
+                        <group>
+                            <field name="email"/>
+                            <field name="website"/>
+                        </group>
+                    </group>
+                </page>
+
+                <!-- ========================= -->
+                <!-- E. Data Personalia       -->
+                <!-- ========================= -->
+                <page string="Data Personalia">
+                    <group>
+                        <group>
+                            <field name="nama_pimpinan"/>
+                            <field name="hp_pimpinan"/>
+                        </group>
+                        <group>
+                            <field name="kontak_person_1"/>
+                            <field name="hp_kontak_1"/>
+                            <field name="kontak_person_2"/>
+                            <field name="hp_kontak_2"/>
+                        </group>
+                    </group>
+                </page>
+
+                <!-- ========================= -->
+                <!-- F. Rekening Bank         -->
+                <!-- ========================= -->
+                <page string="Data Rekening Bank">
+                    <group>
+                        <field name="bank_ids" nolabel="1">
+                            <list editable="bottom">
+                                <field name="bank_id"/>
+                                <field name="acc_number"/>
+                                <field name="acc_holder_name"/>
+                            </list>
+                        </field>
+                    </group>
+                </page>
+
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

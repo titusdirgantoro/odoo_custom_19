@@ -8,13 +8,6 @@ Construction
 Module tambahan untuk mengelompokkan menu Project, Stock, Product, Employee, dan Pemasok
 khusus untuk kebutuhan konstruksi.
 
-Fitur:
-- Menu utama Construction
-- Menu Project (project.task)
-- Menu Configuration (Warehouse & Location)
-- Menu Product dengan filter Type Master Data (Bahan, Upah, Overhead, Jasa, Sewa Alat)
-- Menu Employee
-- Menu Pemasok (Vendor) dari res.partner
     """,
     'category': 'Construction',
     'author': 'Your Company',
@@ -26,9 +19,22 @@ Fitur:
         'stock',
         'product',
         'hr',
-        'purchase',   # supaya field supplier_rank di res.partner tersedia
+        'purchase', 
+        'base_address_extended'
     ],
     'data': [
+        'data/data.xml',
+        'security/ir.model.access.csv',
+        'views/res_kantor_views.xml',
+        'views/kelompok_proyek_views.xml',
+        'views/res_bidang_views.xml',
+        'views/hr_employee_views.xml',
+        'views/res_sub_bidang_views.xml',
+        'views/status_proyek_views.xml',
+        'views/project_project_views.xml',
+        'views/res_partner_views.xml',
+        'views/supplier_category_views.xml',
+        'views/supplier_service_views.xml',
         'views/construction_menus.xml',
     ],
     'installable': True,

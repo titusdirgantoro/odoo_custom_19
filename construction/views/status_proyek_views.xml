@@ -1,0 +1,35 @@
+<odoo>
+    <record id="view_status_proyek_list" model="ir.ui.view">
+        <field name="name">status.proyek.list</field>
+        <field name="model">status.proyek</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="sequence"/>
+                <field name="name"/>
+                <field name="code"/>
+                <field name="active"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_status_proyek_form" model="ir.ui.view">
+        <field name="name">status.proyek.form</field>
+        <field name="model">status.proyek</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet><group>
+                    <field name="sequence"/>
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="active"/>
+                </group></sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_status_proyek" model="ir.actions.act_window">
+        <field name="name">Status Proyek</field>
+        <field name="res_model">status.proyek</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

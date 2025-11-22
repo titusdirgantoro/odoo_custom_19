@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ==================== -->
+    <!-- MASTER: KANTOR       -->
+    <!-- [database] Kantor    -->
+    <!-- ==================== -->
+
+    <record id="res_kantor_ibmho" model="res.kantor">
+        <field name="name">IBMHO</field>
+        <field name="code">IBMHO</field>
+        <field name="active">True</field>
+    </record>
+
+
+    <!-- ========================== -->
+    <!-- MASTER: KELOMPOK PROYEK    -->
+    <!-- [database] Klp Proyek      -->
+    <!-- ========================== -->
+
+    <record id="kelompok_proyek_pekerjaan" model="kelompok.proyek">
+        <field name="name">Pekerjaan</field>
+        <field name="active">True</field>
+    </record>
+
+    <record id="kelompok_proyek_alat" model="kelompok.proyek">
+        <field name="name">Alat</field>
+        <field name="active">True</field>
+    </record>
+
+    <record id="kelompok_proyek_adm" model="kelompok.proyek">
+        <field name="name">Adm</field>
+        <field name="active">True</field>
+    </record>
+
+    <record id="kelompok_proyek_property" model="kelompok.proyek">
+        <field name="name">Property</field>
+        <field name="active">True</field>
+    </record>
+
+    <record id="kelompok_proyek_investasi" model="kelompok.proyek">
+        <field name="name">Investasi</field>
+        <field name="active">True</field>
+    </record>
+
+    <record id="kelompok_proyek_rkap" model="kelompok.proyek">
+        <field name="name">RKAP</field>
+        <field name="active">True</field>
+    </record>
+
+
+    <!-- ==================== -->
+    <!-- MASTER: BIDANG       -->
+    <!-- [database] Bidang    -->
+    <!-- ==================== -->
+
+    <record id="res_bidang_21000" model="res.bidang">
+        <field name="name">Arsitektural</field>
+        <field name="code">21000</field>
+        <field name="active">True</field>
+    </record>
+
+    <record id="res_bidang_22000" model="res.bidang">
+        <field name="name">Sipil</field>
+        <field name="code">22000</field>
+        <field name="active">True</field>
+    </record>
+
+    <record id="res_bidang_23000" model="res.bidang">
+        <field name="name">Mekanikal</field>
+        <field name="code">23000</field>
+        <field name="active">True</field>
+    </record>
+
+    <record id="res_bidang_24000" model="res.bidang">
+        <field name="name">Elektrikal</field>
+        <field name="code">24000</field>
+        <field name="active">True</field>
+    </record>
+
+    <record id="res_bidang_25000" model="res.bidang">
+        <field name="name">Tata Lingkungan</field>
+        <field name="code">25000</field>
+        <field name="active">True</field>
+    </record>
+
+
+    <!-- ======================== -->
+    <!-- MASTER: SUB BIDANG       -->
+    <!-- [database] Sub Bidang    -->
+    <!-- ======================== -->
+
+
+    <record id="res_sub_bidang_21001" model="res.sub.bidang">
+        <field name="name">Perumahan Tunggal dan Kopel</field>
+        <field name="code">21001</field>
+        <field name="active">True</field>
+    </record>
+
+    <record id="res_sub_bidang_21002" model="res.sub.bidang">
+        <field name="name">Perumahan Multi Hunian</field>
+        <field name="code">21002</field>
+        <field name="active">True</field>
+    </record>
+
+    <record id="res_sub_bidang_21003" model="res.sub.bidang">
+        <field name="name">Bangunan Pergudangan dan Industri</field>
+        <field name="code">21003</field>
+        <field name="active">True</field>
+    </record>
+
+    <record id="res_sub_bidang_21004" model="res.sub.bidang">
+        <field name="name">Bangunan Komersial</field>
+        <field name="code">21004</field>
+        <field name="active">True</field>
+    </record>
+
+    <record id="res_sub_bidang_21005" model="res.sub.bidang">
+        <field name="name">Bangunan-Bangunan Non Perumahan Lainnya</field>
+        <field name="code">21005</field>
+        <field name="active">True</field>
+    </record>
+
+    <record id="res_sub_bidang_21006" model="res.sub.bidang">
+        <field name="name">Fasilitas Sport di luar Gedung, Fasilitas Rekreasi</field>
+        <field name="code">21006</field>
+        <field name="active">True</field>
+    </record>
+
+    <record id="res_sub_bidang_21007" model="res.sub.bidang">
+        <field name="name">Pertamanan</field>
+        <field name="code">21007</field>
+        <field name="active">True</field>
+    </record>
+
+    <record id="res_sub_bidang_21101" model="res.sub.bidang">
+        <field name="name">Pekerjaan Pemasangan Instalasi Asesori Bangunan</field>
+        <field name="code">21101</field>
+        <field name="active">True</field>
+    </record>
+
+    <record id="res_sub_bidang_21102" model="res.sub.bidang">
+        <field name="name">Pekerjaan Dinding dan Jendela Kaca</field>
+        <field name="code">21102</field>
+        <field name="active">True</field>
+    </record>
+
+    <record id="res_sub_bidang_21103" model="res.sub.bidang">
+        <field name="name">Pekerjaan Interior</field>
+        <field name="code">21103</field>
+        <field name="active">True</field>
+    </record>
+
+    <record id="res_sub_bidang_21201" model="res.sub.bidang">
+        <field name="name">Pekerjaan Kayu</field>
+        <field name="code">21201</field>
+        <field name="active">True</field>
+    </record>
+
+    <record id="res_sub_bidang_21202" model="res.sub.bidang">
+        <field name="name">Pekerjaan Logam</field>
+        <field name="code">21202</field>
+        <field name="active">True</field>
+    </record>
+
+    <record id="res_sub_bidang_21301" model="res.sub.bidang">
+        <field name="name">Perawatan Gedung/Bangunan</field>
+        <field name="code">21301</field>
+        <field name="active">True</field>
+    </record>
+
+
+    <!-- ======================== -->
+    <!-- MASTER: STATUS PROYEK    -->
+    <!-- [database] Status Proyek -->
+    <!-- ======================== -->
+
+    <record id="status_proyek_persiapan" model="status.proyek">
+        <field name="name">Proyek Dalam Masa Persiapan</field>
+        <field name="sequence">10</field>
+        <field name="active">True</field>
+    </record>
+
+    <record id="status_proyek_berjalan" model="status.proyek">
+        <field name="name">Proyek Sedang Berjalan</field>
+        <field name="sequence">20</field>
+        <field name="active">True</field>
+    </record>
+
+    <record id="status_proyek_selesai" model="status.proyek">
+        <field name="name">Proyek Sudah Selesai</field>
+        <field name="sequence">30</field>
+        <field name="active">True</field>
+    </record>
+
+    <record id="status_proyek_tutup_buku" model="status.proyek">
+        <field name="name">Proyek Sudah Tutup Buku</field>
+        <field name="sequence">40</field>
+        <field name="active">True</field>
+    </record>
+
+    <record id="status_proyek_acuan" model="status.proyek">
+        <field name="name">Proyek Acuan</field>
+        <field name="sequence">50</field>
+        <field name="active">True</field>
+    </record>
+
+    <record id="status_proyek_pemeliharaan" model="status.proyek">
+        <field name="name">Proyek Dalam Masa Pemeliharaan</field>
+        <field name="sequence">60</field>
+        <field name="active">True</field>
+    </record>
+
+    <!-- ======================= -->
+    <!-- [database] Kategori     -->
+    <!-- ======================= -->
+
+    <record id="supplier_category_bahan" model="supplier.category">
+        <field name="code">B</field>
+        <field name="name">Bahan</field>
+        <field name="active">True</field>
+    </record>
+
+    <record id="supplier_category_upah" model="supplier.category">
+        <field name="code">U</field>
+        <field name="name">Upah</field>
+        <field name="active">True</field>
+    </record>
+
+    <record id="supplier_category_sewa_alat" model="supplier.category">
+        <field name="code">A</field>
+        <field name="name">Sewa Alat</field>
+        <field name="active">True</field>
+    </record>
+
+    <record id="supplier_category_subkon" model="supplier.category">
+        <field name="code">S</field>
+        <field name="name">Subkon</field>
+        <field name="active">True</field>
+    </record>
+
+    <record id="supplier_category_overhead" model="supplier.category">
+        <field name="code">O</field>
+        <field name="name">Overhead</field>
+        <field name="active">True</field>
+    </record>
+
+    <record id="supplier_category_jasa" model="supplier.category">
+        <field name="code">J</field>
+        <field name="name">Jasa</field>
+        <field name="active">True</field>
+    </record>
+
+    <!-- ======================= -->
+    <!-- [database] Layanan      -->
+    <!-- ======================= -->
+
+    <record id="supplier_service_alat_berat" model="supplier.service">
+        <field name="name">Alat Berat</field>
+        <field name="active">True</field>
+    </record>
+
+    <record id="supplier_service_armco" model="supplier.service">
+        <field name="name">Armco/Amarco</field>
+        <field name="active">True</field>
+    </record>
+
+    <record id="supplier_service_bangunan_elektronik" model="supplier.service">
+        <field name="name">Bangunan dan Elektronik</field>
+        <field name="active">True</field>
+    </record>
+
+    <record id="supplier_service_beko_loader" model="supplier.service">
+        <field name="name">Beko Loader</field>
+        <field name="active">True</field>
+    </record>
+
+    <record id="supplier_service_besi" model="supplier.service">
+        <field name="name">Besi</field>
+        <field name="active">True</field>
+    </record>
+
+    <record id="supplier_service_bensin" model="supplier.service">
+        <field name="name">Bensin</field>
+        <field name="active">True</field>
+    </record>
+    
+</odoo>
