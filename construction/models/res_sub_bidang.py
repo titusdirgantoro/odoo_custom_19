@@ -11,7 +11,8 @@ class ResSubBidang(models.Model):
     active = fields.Boolean(default=True)
 
     def _compute_display_name(self):
-        if self.code:
-            self.display_name = f"{self.code} - {self.name}"
-        else:
-            self.display_name = self.name
+        for rec in self:
+            if rec.code:
+                rec.display_name = f"{rec.code} - {rec.name}"
+            else:
+                rec.display_name = rec.name

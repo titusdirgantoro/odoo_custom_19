@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
+    
     <record id="inherit_edit_project" model="ir.ui.view">
         <field name="name">project.project.view.form.inherit</field>
         <field name="model">project.project</field>
         <field name="inherit_id" ref="project.edit_project"/>
         <field name="arch" type="xml">
+            <xpath expr="//page[@name='settings']" position="attributes">
+                <attribute name="invisible">True</attribute >
+            </xpath>
             <xpath expr="//page[@name='description']" position="after">
 
                 <!-- ===================== -->

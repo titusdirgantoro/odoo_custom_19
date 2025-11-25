@@ -12,4 +12,5 @@ class StatusProyek(models.Model):
     active = fields.Boolean(default=True)
 
     def _compute_display_name(self):
-        self.display_name = f"{self.code} - {self.name}" if self.code else self.name
+        for rec in self:
+            rec.display_name = f"{rec.code} - {rec.name}" if rec.code else rec.name
