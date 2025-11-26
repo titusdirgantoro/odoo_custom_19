@@ -5,8 +5,15 @@
         <field name="model">res.partner</field>
         <field name="inherit_id" ref="base.view_partner_form"/>
         <field name="arch" type="xml">
-
-            <!-- Tambahkan page-page baru setelah tab contact_addresses bawaan Odoo -->
+            <xpath expr="//div[@name='button_box']" position="attributes">
+                <attribute name="class">d-none</attribute>
+            </xpath>
+            <xpath expr="//page[@name='contact_addresses']" position="attributes">
+                <attribute name="invisible">True</attribute>
+            </xpath>
+            <xpath expr="//page[@name='sales_purchases']" position="attributes">
+                <attribute name="invisible">True</attribute>
+            </xpath>
             <xpath expr="//page[@name='contact_addresses']" position="after">
 
                 <!-- ========================= -->
@@ -31,15 +38,12 @@
                 <!-- ========================= -->
                 <page string="Data Keuangan">
                     <group>
-                        <group>
+                        <group invisible="company_type != 'company'">
                             <field name="no_pkp"/>
                             <field name="no_fp"/>
-                            <field name="harus_ppn"/>
                         </group>
                         <group>
-                            <field name="npwp"/>
                             <field name="npwp16"/>
-                            <field name="ktp"/>
                         </group>
                     </group>
                 </page>
@@ -47,21 +51,19 @@
                 <!-- ========================= -->
                 <!-- C. Alamat & Lokasi       -->
                 <!-- ========================= -->
-                <page string="Data Alamat &amp; Lokasi">
+                <!-- <page string="Data Alamat &amp; Lokasi">
                     <group>
                         <group>
-                            <!-- alamat_1, kode_pos, kabupaten/kota -->
                             <field name="street"/>
                             <field name="zip"/>
                             <field name="city"/>
                         </group>
                         <group>
-                            <!-- provinsi, negara -->
                             <field name="state_id"/>
                             <field name="country_id"/>
                         </group>
                     </group>
-                </page>
+                </page> -->
 
                 <!-- ========================= -->
                 <!-- D. Data Kontak           -->
@@ -112,6 +114,29 @@
                     </group>
                 </page>
 
+            </xpath>
+        </field>
+    </record>
+
+    <record id="inherit_view_id_res_partner_tax_form_view" model="ir.ui.view">
+        <field name="name">res.partner.view.form.inherit.coretax</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="l10n_id_efaktur_coretax.res_partner_tax_form_view"/>
+        <field name="arch" type="xml">
+            
+            <xpath expr="//field[@name='l10n_id_pkp']" position="attributes">
+                <attribute name="invisible">country_id and country_code != 'ID' or company_type != 'company'</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="inherit_view_id_res_partner_account_form_view" model="ir.ui.view">
+        <field name="name">res.partner.view.form.inherit.accounting</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="account.view_partner_property_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='accounting']" position="attributes">
+                <attribute name="invisible">True</attribute>
             </xpath>
         </field>
     </record>

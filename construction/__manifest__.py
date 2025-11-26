@@ -20,7 +20,8 @@ khusus untuk kebutuhan konstruksi.
         'product',
         'hr',
         'purchase', 
-        'base_address_extended'
+        'base_address_extended',
+        'l10n_id_efaktur_coretax'
     ],
     'data': [
         'data/data.xml',

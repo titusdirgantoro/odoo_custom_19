@@ -32,11 +32,11 @@ class ResPartner(models.Model):
     # =========================
     no_pkp = fields.Char(string='No PKP')
     no_fp = fields.Char(string='No FP')
-    harus_ppn = fields.Boolean(
-        string='Harus PPN',
-        help='Centang jika transaksi dengan pemasok ini wajib dikenai PPN.'
-    )
-    npwp = fields.Char(string='NPWP')
+    # harus_ppn = fields.Boolean(
+    #     string='Harus PPN',
+    #     help='Centang jika transaksi dengan pemasok ini wajib dikenai PPN.'
+    # )
+    # npwp = fields.Char(string='NPWP')
     npwp16 = fields.Char(string='NPWP 16 Digit')
     ktp = fields.Char(string='KTP')
 

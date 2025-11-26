@@ -80,7 +80,7 @@
 
         <record id="action_construction_product_bahan" model="ir.actions.act_window">
             <field name="name">Produk Bahan</field>
-            <field name="res_model">product.product</field>
+            <field name="res_model">product.template</field>
             <field name="view_mode">list,form</field>
             <field name="domain">[('type_master_data', '=', 'bahan')]</field>
             <field name="context">
@@ -98,7 +98,7 @@
 
         <record id="action_construction_product_upah" model="ir.actions.act_window">
             <field name="name">Produk Upah</field>
-            <field name="res_model">product.product</field>
+            <field name="res_model">product.template</field>
             <field name="view_mode">list,form</field>
             <field name="domain">[('type_master_data', '=', 'upah')]</field>
             <field name="context">
@@ -117,7 +117,7 @@
         <!-- Produk Overhead -->
         <record id="action_construction_product_overhead" model="ir.actions.act_window">
             <field name="name">Product Overhead</field>
-            <field name="res_model">product.product</field>
+            <field name="res_model">product.template</field>
             <field name="view_mode">list,form</field>
             <field name="domain">[('type_master_data', '=', 'overhead')]</field>
             <field name="context">
@@ -136,7 +136,7 @@
         <!-- Produk Jasa -->
         <record id="action_construction_product_jasa" model="ir.actions.act_window">
             <field name="name">Product Jasa</field>
-            <field name="res_model">product.product</field>
+            <field name="res_model">product.template</field>
             <field name="view_mode">list,form</field>
             <field name="domain">[('type_master_data', '=', 'jasa')]</field>
             <field name="context">
@@ -154,7 +154,7 @@
 
         <record id="action_construction_product_sewa_alat" model="ir.actions.act_window">
             <field name="name">Product Sewa Alat</field>
-            <field name="res_model">product.product</field>
+            <field name="res_model">product.template</field>
             <field name="view_mode">list,form</field>
             <field name="domain">[('type_master_data', '=', 'sewa_alat')]</field>
             <field name="context">

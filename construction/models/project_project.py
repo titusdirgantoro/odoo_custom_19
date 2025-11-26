@@ -33,7 +33,7 @@ class ProjectProject(models.Model):
     tgl_mulai_schedule = fields.Date('Tanggal Mulai Schedule')
     tgl_selesai_schedule = fields.Date('Tanggal Selesai Schedule')
     waktu_pemeliharaan_hari = fields.Integer('Waktu Schedule (Hari)')
-    waktu_pemeliharaan_hari = fields.Integer('Waktu Schedule (Minggu)')
+    waktu_pemeliharaan_minggu = fields.Integer('Waktu Schedule (Minggu)')
 
     # Data Lokasi & Kontrak
     nomor_kontrak = fields.Char('Nomor Kontrak')
@@ -41,7 +41,7 @@ class ProjectProject(models.Model):
     lokasi_proyek = fields.Char('Lokasi Proyek')
     kota_proyek = fields.Many2one('res.city', string='Kota Proyek')
     propinsi_proyek = fields.Many2one('res.country.state', string='Provinsi Proyek')
-    pm_proyek_id = fields.Many2one('hr.employee', string='PM Proyek')
+    
 
     # Data Keuangan
     nilai_kontrak = fields.Float('Nilai Kontrak')

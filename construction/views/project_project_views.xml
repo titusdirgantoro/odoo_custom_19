@@ -1,13 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    
     <record id="inherit_edit_project" model="ir.ui.view">
         <field name="name">project.project.view.form.inherit</field>
         <field name="model">project.project</field>
         <field name="inherit_id" ref="project.edit_project"/>
         <field name="arch" type="xml">
             <xpath expr="//page[@name='settings']" position="attributes">
+                <attribute name="invisible">True</attribute >
+            </xpath>
+            <xpath expr="//sheet//group//field[@name='label_tasks']" position="attributes">
+                <attribute name="invisible">True</attribute >
+            </xpath>
+            <xpath expr="//sheet//group//field[@name='tag_ids']" position="attributes">
+                <attribute name="invisible">True</attribute >
+            </xpath>
+            <xpath expr="//sheet//group//field[@name='company_id']" position="attributes">
+                <attribute name="groups"></attribute >
+            </xpath>
+            <xpath expr="//sheet//group//field[@name='date_start']" position="attributes">
+                <attribute name="invisible">True</attribute >
+            </xpath>
+            <xpath expr="//button[@name='action_view_tasks']" position="attributes">
+                <attribute name="invisible">True</attribute >
+            </xpath>
+            <xpath expr="//button[@name='project_update_all_action']" position="attributes">
                 <attribute name="invisible">True</attribute >
             </xpath>
             <xpath expr="//page[@name='description']" position="after">
@@ -70,10 +87,8 @@
                             <field name="tgl_selesai_schedule"/>
                         </group>
                         <group>
-                            <!-- di Python field waktu_pemeliharaan_hari dipakai
-                                 untuk 2 label (Hari &amp; Minggu) -->
                             <field name="waktu_pemeliharaan_hari"/>
-                            <field name="waktu_pemeliharaan_hari"/>
+                            <field name="waktu_pemeliharaan_minggu"/>
                         </group>
                     </group>
                 </page>
@@ -94,9 +109,6 @@
                             <field name="kota_proyek"/>
                             <field name="propinsi_proyek"/>
                         </group>
-                        <group>
-                            <field name="pm_proyek_id"/>
-                        </group>
                     </group>
                 </page>
 
@@ -111,8 +123,8 @@
                             <field name="target_rap"/>
                         </group>
                         <group>
-                            <field name="nilai_pekerjaan_rap"/>
-                            <field name="nilai_pekerjaan_kontrak"/>
+                            <field name="nilai_pekerjaan_rap" readonly="True"/>
+                            <field name="nilai_pekerjaan_kontrak" readonly="True"/>
                             <field name="status_proyek_id"/>
                         </group>
                     </group>
@@ -133,6 +145,39 @@
                     </group>
                 </page>
 
+            </xpath>
+        </field>
+    </record>
+
+    <record id="inherit_view_id_project" model="ir.ui.view">
+        <field name="name">project.project.view.form.inherit</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.view_project"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="user_id" />
+                <field name="nilai_kontrak" />
+                <field name="target_rap" />
+                <field name="nilai_pekerjaan_rap" />
+                <field name="nilai_pekerjaan_kontrak" />
+                <field name="status_proyek_id" />
+                <field name="tgl_mulai_schedule" />
+                <field name="tgl_selesai_schedule" />
+            </xpath>
+            <xpath expr="//field[@name='company_id']" position="attributes">
+                <attribute name="invisible">True</attribute >
+            </xpath>
+            <xpath expr="//field[@name='partner_id']" position="attributes">
+                <attribute name="invisible">True</attribute >
+            </xpath>
+            <xpath expr="//button[@name='action_view_tasks']" position="attributes">
+                <attribute name="invisible">True</attribute >
+            </xpath>
+            <xpath expr="//field[@name='stage_id']" position="attributes">
+                <attribute name="invisible">True</attribute >
+            </xpath>
+            <xpath expr="//field[@name='last_update_status']" position="attributes">
+                <attribute name="invisible">True</attribute >
             </xpath>
         </field>
     </record>
