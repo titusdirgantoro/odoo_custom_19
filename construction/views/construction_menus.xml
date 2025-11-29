@@ -224,5 +224,59 @@
                 action="construction.action_supplier_service"
                 sequence="60"/>
 
+        <menuitem
+            id="menu_construction_product_configuration"
+            name="Product Construction"
+            parent="menu_construction_configuration"
+            sequence="65"
+        />
+
+        <menuitem
+            id="menu_construction_material_group"
+            name="Kelompok Bahan"
+            parent="menu_construction_product_configuration"
+            action="action_construction_material_group"
+            sequence="10"
+        />
+
+        <menuitem
+            id="menu_construction_skill_level"
+            name="Level Keahlian"
+            parent="menu_construction_product_configuration"
+            action="action_construction_skill_level"
+            sequence="20"
+        />
+
+        <menuitem
+            id="menu_construction_overhead_type"
+            name="Tipe Overhead"
+            parent="menu_construction_product_configuration"
+            action="action_construction_overhead_type"
+            sequence="30"
+        />
+
+        <menuitem
+            id="menu_construction_service_category"
+            name="Kategori Jasa Product"
+            parent="menu_construction_product_configuration"
+            action="action_construction_service_category"
+            sequence="40"
+        />
+
+        <menuitem
+            id="menu_construction_equipment_category"
+            name="Kategori Alat"
+            parent="menu_construction_product_configuration"
+            action="action_construction_equipment_category"
+            sequence="50"
+        />
+
+        <menuitem
+            id="menu_construction_usage_category"
+            name="Kategori Penggunaan"
+            parent="menu_construction_product_configuration"
+            action="action_construction_usage_category"
+            sequence="60"
+        />
     </data>
 </odoo>

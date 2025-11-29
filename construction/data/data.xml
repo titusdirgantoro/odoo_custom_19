@@ -284,5 +284,45 @@
         <field name="name">Bensin</field>
         <field name="active">True</field>
     </record>
+
+    <record id="usage_category_consumable_bbm" model="construction.usage.category">
+        <field name="name">Consumable BBM</field>
+    </record>
+
+    <record id="usage_category_consumable_non_bbm" model="construction.usage.category">
+        <field name="name">Consumable Non BBM</field>
+    </record>
+
+    <record id="usage_category_sparepart" model="construction.usage.category">
+        <field name="name">Sparepart</field>
+    </record>
+
+    <record id="usage_category_bahan_timbang" model="construction.usage.category">
+        <field name="name">Bahan Timbang</field>
+    </record>
+
+    <record id="usage_category_bahan_utama" model="construction.usage.category">
+        <field name="name">Bahan Utama</field>
+    </record>
+
+    <record id="usage_category_bahan_dijual" model="construction.usage.category">
+        <field name="name">Bahan Dijual</field>
+    </record>
+
+    <record id="usage_category_bahan_kantor" model="construction.usage.category">
+        <field name="name">Bahan Kantor</field>
+    </record>
+
+    <record id="usage_category_bahan_workshop" model="construction.usage.category">
+        <field name="name">Bahan Workshop</field>
+    </record>
+
+    <record id="usage_category_bahan_proyek" model="construction.usage.category">
+        <field name="name">Bahan Proyek</field>
+    </record>
+
+    <record id="usage_category_bahan_ppn" model="construction.usage.category">
+        <field name="name">Bahan PPN</field>
+    </record>
     
 </odoo>

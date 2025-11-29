@@ -1,5 +1,10 @@
-from . import product
 
+from . import material_group
+from . import skill_level
+from . import overhead_type
+from . import service_category
+from . import equipment_category
+from . import usage_category
 from . import res_kantor
 from . import kelompok_proyek
 from . import res_bidang
@@ -8,4 +13,5 @@ from . import status_proyek
 from . import supplier_category
 from . import supplier_service
 from . import res_partner
+from . import product
 from . import project_project
