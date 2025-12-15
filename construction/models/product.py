@@ -54,6 +54,18 @@ class ProductTemplate(models.Model):
         string='Satuan RAP',
         help='Satuan yang digunakan pada koefisien RAP.'
     )
+    construction_price = fields.Monetary(
+        string='Harga',
+        currency_field='currency_id',
+        default=0.0,
+        help='Harga acuan PT untuk kebutuhan master data (bukan harga jual).'
+    )
+    construction_product_type = fields.Selection(
+        [('product', 'Barang'), ('service', 'Layanan')],
+        string='Tipe Produk',
+        default='product',
+        required=True
+    )
 
     # =========================================================
     # FIELD KHUSUS TYPE: BAHAN
@@ -133,6 +145,15 @@ class ProductTemplate(models.Model):
         help='Durasi minimum sewa dalam satuan yang dipilih.'
     )
 
+    @api.onchange('construction_product_type')
+    def _onchange_construction_product_type(self):
+        """Sinkronkan ke field standar Odoo (detailed_type atau type)."""
+        for rec in self:
+            if 'detailed_type' in rec._fields:
+                rec.detailed_type = rec.construction_product_type
+            elif 'type' in rec._fields:
+                rec.type = rec.construction_product_type
+                
     @api.depends('parent_product_id', 'parent_product_id.product_level')
     def _compute_product_level(self):
         for rec in self:
@@ -146,7 +167,30 @@ class ProductTemplate(models.Model):
         """Cegah loop / siklus parent-child (A anaknya B, B anaknya A, dst)."""
         if not self._check_recursion(parent='parent_product_id'):
             raise ValidationError(_('You cannot create recursive product hierarchies.'))
-        
+    
+    @api.model_create_multi
+    def create(self, vals_list):
+        """Pastikan saat create dari menu master, type standar ikut terset."""
+        for vals in vals_list:
+            ctype = vals.get('construction_product_type')
+            if ctype:
+                if 'detailed_type' in self._fields and not vals.get('detailed_type'):
+                    vals['detailed_type'] = ctype
+                if 'type' in self._fields and not vals.get('type'):
+                    vals['type'] = ctype
+        return super().create(vals_list)
+    
+    def write(self, vals):
+        """Jika construction_product_type diubah, sync ke field standar."""
+        if 'construction_product_type' in vals:
+            ctype = vals.get('construction_product_type')
+            if ctype:
+                if 'detailed_type' in self._fields and 'detailed_type' not in vals:
+                    vals['detailed_type'] = ctype
+                if 'type' in self._fields and 'type' not in vals:
+                    vals['type'] = ctype
+        return super().write(vals)
+    
 class ProductProduct(models.Model):
     _inherit = 'product.product'
 

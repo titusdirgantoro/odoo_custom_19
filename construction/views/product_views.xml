@@ -1,10 +1,110 @@
 <odoo>
+    <record id="construction_product_template_tree_bahan" model="ir.ui.view">
+        <field name="name">product.template.list.construction.master.bahan</field>
+        <field name="model">product.template</field>
+        <field name="arch" type="xml">
+            <list string="Master Bahan" default_order="write_date desc">
+                <field name="default_code" string="Kode Bahan"/>
+                <field name="name" string="Nama Bahan"/>
+                <field name="construction_price" string="Harga" widget="monetary"
+                    options="{'currency_field': 'currency_id'}"/>
+                <field name="uom_id" string="Satuan Bahan"/>
+                <field name="active" string="Status" widget="boolean"/>
+                <field name="create_date" string="Created at"/>
+                <field name="write_date" string="Updated at"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="construction_product_template_tree_upah" model="ir.ui.view">
+        <field name="name">product.template.list.construction.master.upah</field>
+        <field name="model">product.template</field>
+        <field name="arch" type="xml">
+            <list string="Master Upah" default_order="write_date desc">
+                <field name="default_code" string="Kode Upah"/>
+                <field name="name" string="Nama Upah"/>
+                <field name="construction_price" string="Harga" widget="monetary"
+                    options="{'currency_field': 'currency_id'}"/>
+                <field name="uom_id" string="Satuan Upah"/>
+                <field name="active" string="Status" widget="boolean"/>
+                <field name="create_date" string="Created at"/>
+                <field name="write_date" string="Updated at"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="construction_product_template_tree_sewa_alat" model="ir.ui.view">
+        <field name="name">product.template.list.construction.master.sewa.alat</field>
+        <field name="model">product.template</field>
+        <field name="arch" type="xml">
+            <list string="Master Sewa Alat" default_order="write_date desc">
+                <field name="default_code" string="Kode Sewa Alat"/>
+                <field name="name" string="Nama Sewa Alat"/>
+                <field name="construction_price" string="Harga" widget="monetary"
+                    options="{'currency_field': 'currency_id'}"/>
+                <field name="uom_id" string="Satuan Sewa Alat"/>
+                <field name="active" string="Status" widget="boolean"/>
+                <field name="create_date" string="Created at"/>
+                <field name="write_date" string="Updated at"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="construction_product_template_tree_overhead" model="ir.ui.view">
+        <field name="name">product.template.list.construction.master.overhead</field>
+        <field name="model">product.template</field>
+        <field name="arch" type="xml">
+            <list string="Master Overhead" default_order="write_date desc">
+                <field name="default_code" string="Kode Overhead"/>
+                <field name="name" string="Nama Overhead"/>
+                <field name="construction_price" string="Harga" widget="monetary"
+                    options="{'currency_field': 'currency_id'}"/>
+                <field name="uom_id" string="Satuan Overhead"/>
+                <field name="active" string="Status" widget="boolean"/>
+                <field name="create_date" string="Created at"/>
+                <field name="write_date" string="Updated at"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="construction_product_template_tree_jasa" model="ir.ui.view">
+        <field name="name">product.template.list.construction.master.jasa</field>
+        <field name="model">product.template</field>
+        <field name="arch" type="xml">
+            <list string="Master Jasa" default_order="write_date desc">
+                <field name="default_code" string="Kode Jasa"/>
+                <field name="name" string="Nama Jasa"/>
+                <field name="construction_price" string="Harga" widget="monetary"
+                    options="{'currency_field': 'currency_id'}"/>
+                <field name="uom_id" string="Satuan Jasa"/>
+                <field name="active" string="Status" widget="boolean"/>
+                <field name="create_date" string="Created at"/>
+                <field name="write_date" string="Updated at"/>
+            </list>
+        </field>
+    </record>
+
+
 
     <record id="inherit_product_template_form_view" model="ir.ui.view">
         <field name="name">product.template.view.form.inherit</field>
         <field name="model">product.template</field>
         <field name="inherit_id" ref="product.product_template_form_view"/>
         <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="attributes">
+                <attribute name="class">d-none</attribute>
+            </xpath>
+            <xpath expr="//form/sheet" position="before">
+                <header>
+                    <button type="object"
+                        name= "action_view_stock_move_lines"
+                        invisible="type != 'consu'"
+                        class="oe_stat_button" icon="fa-exchange"
+                        groups="stock.group_stock_user">Moves History
+                    </button>
+                </header>
+                
+            </xpath>
             <xpath expr="//page[@name='general_information']" position="attributes">
                 <attribute name="invisible">True</attribute>
             </xpath>
@@ -27,7 +127,10 @@
         <field name="model">product.template</field>
         <field name="inherit_id" ref="product.product_template_only_form_view"/>
         <field name="arch" type="xml">
-
+            <xpath expr="//page[@name='variants']" position="attributes">
+                <attribute name="invisible">True</attribute>
+            </xpath>
+            
             <!-- Tambahkan field umum MODUL PRODUCT -->
             <xpath expr="//page[@name='general_information']" position="before">
                              
@@ -40,7 +143,7 @@
                             <field colspan="2" name="description" nolabel="1" placeholder="This note of description is only for internal purposes."/>
                         </group>
                         <group string="Construction">
-                            <field name="type" widget="radio" options="{'horizontal': True}"/>
+                            <field name="construction_product_type" widget="radio" options="{'horizontal': True}"/>
                             <field name="en_name" />
                             <field name="default_code" string="Kode Bahan"/>
                             <field name="type_master_data"/>
@@ -53,7 +156,7 @@
                         </group>
                         <group string="Lokasi &amp; Harga">
                             <field name="city_id" />
-                            <field name="list_price"
+                            <field name="construction_price"
                                 widget="monetary"
                                 options="{'currency_field': 'currency_id', 'field_digits': True}"/>
                             <field name="tanggal_harga" />
@@ -87,7 +190,7 @@
                             <field colspan="2" name="description" nolabel="1" placeholder="This note of description is only for internal purposes."/>
                         </group>
                         <group string="Construction">
-                            <field name="type" widget="radio" options="{'horizontal': True}"/>
+                            <field name="construction_product_type" widget="radio" options="{'horizontal': True}"/>
                             <field name="en_name" />
                             <field name="default_code" string="Kode Upah"/>
                             <field name="type_master_data"/>
@@ -97,15 +200,15 @@
                         </group>
                         <group string="Lokasi &amp; Harga">
                             <field name="city_id" />
-                            <field name="list_price"
+                            <field name="construction_price"
                                 widget="monetary"
                                 options="{'currency_field': 'currency_id', 'field_digits': True}"/>
                             <field name="tanggal_harga" />
-                            <field name="is_status_upah_alat" />
+                            <field name="is_status_upah_alat"/>
                         </group>
                         <group string="Integrasi COA">
                             <field name="product_account_id" options="{'no_create': True}"/>
-                            <field name="skill_level_id"/>
+                            <field name="skill_level_id" invisible="1"/>
                         </group>
                     </group>
                 </page>
@@ -118,7 +221,7 @@
                             <field colspan="2" name="description" nolabel="1" placeholder="This note of description is only for internal purposes."/>
                         </group>
                         <group string="Construction">
-                            <field name="type" widget="radio" options="{'horizontal': True}"/>
+                            <field name="construction_product_type" widget="radio" options="{'horizontal': True}"/>
                             <field name="en_name" />
                             <field name="default_code" string="Kode Overhead"/>
                             <field name="type_master_data"/>
@@ -130,16 +233,13 @@
                         </group>
                         <group string="Lokasi &amp; Harga">
                             <field name="city_id" />
-                            <field name="list_price"
+                            <field name="construction_price"
                                 widget="monetary"
                                 options="{'currency_field': 'currency_id', 'field_digits': True}"/>
                             <field name="tanggal_harga" />
                         </group>
                         <group string="Integrasi COA">
                             <field name="product_account_id" options="{'no_create': True}"/>
-                        </group>
-                        <group>
-                            <field name="overhead_type_id"/>
                         </group>
                     </group>
                 </page>
@@ -152,7 +252,7 @@
                             <field colspan="2" name="description" nolabel="1" placeholder="This note of description is only for internal purposes."/>
                         </group>
                         <group string="Construction">
-                            <field name="type" widget="radio" options="{'horizontal': True}"/>
+                            <field name="construction_product_type" widget="radio" options="{'horizontal': True}"/>
                             <field name="en_name" />
                             <field name="default_code" string="Kode Alat"/>
                             <field name="type_master_data"/>
@@ -160,14 +260,21 @@
                                 options="{'no_quick_create': True}"
                             />
                         </group>
+                        <group string="Lokasi &amp; Harga">
+                            <field name="city_id" />
+                            <field name="construction_price"
+                                widget="monetary"
+                                options="{'currency_field': 'currency_id', 'field_digits': True}"/>
+                            <field name="tanggal_harga" />
+                        </group>
                         <group string="Integrasi COA">
                             <field name="kantor_account_id" options="{'no_create': True}"/>
                             <field name="workshop_account_id" options="{'no_create': True}"/>
                             <field name="proyek_account_id" options="{'no_create': True}"/>
                         </group>
-                        <group>
+                        <!-- <group>
                             <field name="service_category_id"/>
-                        </group>
+                        </group> -->
                     </group>
                 </page>
 
@@ -179,7 +286,7 @@
                             <field colspan="2" name="description" nolabel="1" placeholder="This note of description is only for internal purposes."/>
                         </group>
                         <group string="Construction">
-                            <field name="type" widget="radio" options="{'horizontal': True}"/>
+                            <field name="construction_product_type" widget="radio" options="{'horizontal': True}"/>
                             <field name="en_name" />
                             <field name="default_code" string="Kode Alat"/>
                             <field name="type_master_data"/>
@@ -191,19 +298,18 @@
                         </group>
                         <group string="Lokasi &amp; Harga">
                             <field name="city_id" />
-                            <field name="list_price"
+                            <field name="construction_price"
                                 widget="monetary"
                                 options="{'currency_field': 'currency_id', 'field_digits': True}"/>
                             <field name="tanggal_harga" />
                         </group>
                         <group string="Integrasi COA">
                             <field name="product_account_id" options="{'no_create': True}"/>
-                            <field name="skill_level_id"/>
                         </group>
                     </group>
                 </page>
 
-                <page string="Child Products">
+                <page string="Child Products" invisible="type_master_data != 'bahan'">
                     <group>
                         <group>
                             <field name="product_level" readonly="1"/>
@@ -213,10 +319,106 @@
                     <group>
                         <field name="child_product_ids" context="{'default_type':type, 'default_type_master_data':type_master_data}">
                             <list>
-                                <field name="default_code"/>
-                                <field name="name"/>
-                                <field name="type_master_data"/>
-                                <field name="product_level" readonly="1"/>
+                                <field name="default_code" string="Kode Bahan"/>
+                                <field name="name" string="Nama Bahan"/>
+                                <field name="construction_price" string="Harga" widget="monetary"
+                                    options="{'currency_field': 'currency_id'}"/>
+                                <field name="uom_id" string="Satuan Bahan"/>
+                                <field name="active" string="Status" widget="boolean"/>
+                                <field name="create_date" string="Created at"/>
+                                <field name="write_date" string="Updated at"/>
+                            </list>
+                        </field>
+                    </group>
+                </page>
+                <page string="Child Products" invisible="type_master_data != 'upah'">
+                    <group>
+                        <group>
+                            <field name="product_level" readonly="1"/>
+                            <field name="parent_product_id" options="{'no_create': True}"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="child_product_ids"
+                            context="{'default_type_master_data': type_master_data, 'default_construction_product_type': construction_product_type}">
+                            <list create="0" edit="0">
+                                <field name="default_code" string="Kode Upah"/>
+                                <field name="name" string="Nama Upah"/>
+                                <field name="construction_price" string="Harga" widget="monetary"
+                                    options="{'currency_field': 'currency_id'}"/>
+                                <field name="uom_id" string="Satuan Upah"/>
+                                <field name="active" string="Status" widget="boolean"/>
+                                <field name="create_date" string="Created at"/>
+                                <field name="write_date" string="Updated at"/>
+                            </list>
+                        </field>
+                    </group>
+                </page>
+                <page string="Child Products" invisible="type_master_data != 'sewa_alat'">
+                    <group>
+                        <group>
+                            <field name="product_level" readonly="1"/>
+                            <field name="parent_product_id" options="{'no_create': True}"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="child_product_ids"
+                            context="{'default_type_master_data': type_master_data, 'default_construction_product_type': construction_product_type}">
+                            <list create="0" edit="0">
+                                <field name="default_code" string="Kode Sewa Alat"/>
+                                <field name="name" string="Nama Sewa Alat"/>
+                                <field name="construction_price" string="Harga" widget="monetary"
+                                    options="{'currency_field': 'currency_id'}"/>
+                                <field name="uom_id" string="Satuan Sewa Alat"/>
+                                <field name="active" string="Status" widget="boolean"/>
+                                <field name="create_date" string="Created at"/>
+                                <field name="write_date" string="Updated at"/>
+                            </list>
+                        </field>
+                    </group>
+                </page>
+                <page string="Child Products" invisible="type_master_data != 'overhead'">
+                    <group>
+                        <group>
+                            <field name="product_level" readonly="1"/>
+                            <field name="parent_product_id" options="{'no_create': True}"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="child_product_ids"
+                            context="{'default_type_master_data': type_master_data, 'default_construction_product_type': construction_product_type}">
+                            <list create="0" edit="0">
+                                <field name="default_code" string="Kode Overhead"/>
+                                <field name="name" string="Nama Overhead"/>
+                                <field name="construction_price" string="Harga" widget="monetary"
+                                    options="{'currency_field': 'currency_id'}"/>
+                                <field name="uom_id" string="Satuan Overhead"/>
+                                <field name="active" string="Status" widget="boolean"/>
+                                <field name="create_date" string="Created at"/>
+                                <field name="write_date" string="Updated at"/>
+                            </list>
+                        </field>
+                    </group>
+                </page>
+                <page string="Child Products" invisible="type_master_data != 'jasa'">
+                    <group>
+                        <group>
+                            <field name="product_level" readonly="1"/>
+                            <field name="parent_product_id" options="{'no_create': True}"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="child_product_ids"
+                            context="{'default_type_master_data': type_master_data, 'default_construction_product_type': construction_product_type}">
+                            <list create="0" edit="0">
+                                <field name="default_code" string="Kode Jasa"/>
+                                <field name="name" string="Nama Jasa"/>
+                                <field name="construction_price" string="Harga" widget="monetary"
+                                    options="{'currency_field': 'currency_id'}"/>
+                                <field name="uom_id" string="Satuan Jasa"/>
+                                <field name="active" string="Status" widget="boolean"/>
+                                <field name="create_date" string="Created at"/>
+                                <field name="write_date" string="Updated at"/>
                             </list>
                         </field>
                     </group>

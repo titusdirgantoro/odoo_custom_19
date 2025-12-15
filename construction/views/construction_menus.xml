@@ -79,12 +79,16 @@
         />
 
         <record id="action_construction_product_bahan" model="ir.actions.act_window">
-            <field name="name">Produk Bahan</field>
+            <field name="name">Master Bahan</field>
             <field name="res_model">product.template</field>
             <field name="view_mode">list,form</field>
+            <field name="view_id" ref="construction.construction_product_template_tree_bahan"/>
             <field name="domain">[('type_master_data', '=', 'bahan')]</field>
             <field name="context">
-                {'default_type_master_data': 'bahan'}
+                {
+                    'default_type_master_data': 'bahan',
+                    'default_construction_product_type': 'product'
+                }
             </field>
         </record>
 
@@ -97,12 +101,16 @@
         />
 
         <record id="action_construction_product_upah" model="ir.actions.act_window">
-            <field name="name">Produk Upah</field>
+            <field name="name">Master Upah</field>
             <field name="res_model">product.template</field>
             <field name="view_mode">list,form</field>
+            <field name="view_id" ref="construction.construction_product_template_tree_upah"/>
             <field name="domain">[('type_master_data', '=', 'upah')]</field>
             <field name="context">
-                {'default_type_master_data': 'upah'}
+                {
+                    'default_type_master_data': 'upah',
+                    'default_construction_product_type': 'service'
+                }
             </field>
         </record>
 
@@ -116,12 +124,17 @@
 
         <!-- Produk Overhead -->
         <record id="action_construction_product_overhead" model="ir.actions.act_window">
-            <field name="name">Product Overhead</field>
+            <field name="name">Master Overhead</field>
             <field name="res_model">product.template</field>
             <field name="view_mode">list,form</field>
+            <field name="view_id" ref="construction.construction_product_template_tree_overhead"/>
+            <!-- hanya parent, child tidak tampil di menu master -->
             <field name="domain">[('type_master_data', '=', 'overhead')]</field>
             <field name="context">
-                {'default_type_master_data': 'overhead'}
+                {
+                    'default_type_master_data': 'overhead',
+                    'default_construction_product_type': 'service'
+                }
             </field>
         </record>
 
@@ -135,12 +148,16 @@
 
         <!-- Produk Jasa -->
         <record id="action_construction_product_jasa" model="ir.actions.act_window">
-            <field name="name">Product Jasa</field>
+            <field name="name">Master Jasa</field>
             <field name="res_model">product.template</field>
             <field name="view_mode">list,form</field>
+            <field name="view_id" ref="construction.construction_product_template_tree_jasa"/>
             <field name="domain">[('type_master_data', '=', 'jasa')]</field>
             <field name="context">
-                {'default_type_master_data': 'jasa'}
+                {
+                    'default_type_master_data': 'jasa',
+                    'default_construction_product_type': 'service'
+                }
             </field>
         </record>
 
@@ -153,12 +170,17 @@
         />
 
         <record id="action_construction_product_sewa_alat" model="ir.actions.act_window">
-            <field name="name">Product Sewa Alat</field>
+            <field name="name">Master Sewa Alat</field>
             <field name="res_model">product.template</field>
             <field name="view_mode">list,form</field>
+            <field name="view_id" ref="construction.construction_product_template_tree_sewa_alat"/>
+            <!-- hanya parent, child tidak tampil di menu master -->
             <field name="domain">[('type_master_data', '=', 'sewa_alat')]</field>
             <field name="context">
-                {'default_type_master_data': 'sewa_alat'}
+                {
+                    'default_type_master_data': 'sewa_alat',
+                    'default_construction_product_type': 'service'
+                }
             </field>
         </record>
 
