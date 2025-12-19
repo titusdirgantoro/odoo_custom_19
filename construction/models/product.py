@@ -61,9 +61,9 @@ class ProductTemplate(models.Model):
         help='Harga acuan PT untuk kebutuhan master data (bukan harga jual).'
     )
     construction_product_type = fields.Selection(
-        [('product', 'Barang'), ('service', 'Layanan')],
+        [('consu', 'Barang'), ('service', 'Layanan')],
         string='Tipe Produk',
-        default='product',
+        default='consu',
         required=True
     )
 

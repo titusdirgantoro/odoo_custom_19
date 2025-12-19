@@ -73,7 +73,7 @@
 
         <menuitem
             id="menu_construction_products_root"
-            name="Products"
+            name="Masters"
             parent="menu_construction_root"
             sequence="30"
         />
@@ -87,14 +87,14 @@
             <field name="context">
                 {
                     'default_type_master_data': 'bahan',
-                    'default_construction_product_type': 'product'
+                    'default_construction_product_type': 'consu'
                 }
             </field>
         </record>
 
         <menuitem
             id="menu_construction_product_bahan"
-            name="Produk Bahan"
+            name="Master Bahan"
             parent="menu_construction_products_root"
             action="action_construction_product_bahan"
             sequence="10"
@@ -116,13 +116,13 @@
 
         <menuitem
             id="menu_construction_product_upah"
-            name="Produk Upah"
+            name="Master Upah"
             parent="menu_construction_products_root"
             action="action_construction_product_upah"
             sequence="20"
         />
 
-        <!-- Produk Overhead -->
+        <!-- Master Overhead -->
         <record id="action_construction_product_overhead" model="ir.actions.act_window">
             <field name="name">Master Overhead</field>
             <field name="res_model">product.template</field>
@@ -140,13 +140,13 @@
 
         <menuitem
             id="menu_construction_product_overhead"
-            name="Product Overhead"
+            name="Master Overhead"
             parent="menu_construction_products_root"
             action="action_construction_product_overhead"
             sequence="30"
         />
 
-        <!-- Produk Jasa -->
+        <!-- Master Jasa -->
         <record id="action_construction_product_jasa" model="ir.actions.act_window">
             <field name="name">Master Jasa</field>
             <field name="res_model">product.template</field>
@@ -163,7 +163,7 @@
 
         <menuitem
             id="menu_construction_product_jasa"
-            name="Product Jasa"
+            name="Master Jasa"
             parent="menu_construction_products_root"
             action="action_construction_product_jasa"
             sequence="40"
@@ -186,7 +186,7 @@
 
         <menuitem
             id="menu_construction_product_sewa_alat"
-            name="Product Sewa Alat"
+            name="Master Sewa Alat"
             parent="menu_construction_products_root"
             action="action_construction_product_sewa_alat"
             sequence="50"
@@ -248,7 +248,7 @@
 
         <menuitem
             id="menu_construction_product_configuration"
-            name="Product Construction"
+            name="Master Construction"
             parent="menu_construction_configuration"
             sequence="65"
         />
@@ -279,7 +279,7 @@
 
         <menuitem
             id="menu_construction_service_category"
-            name="Kategori Jasa Product"
+            name="Kategori Jasa Master"
             parent="menu_construction_product_configuration"
             action="action_construction_service_category"
             sequence="40"
