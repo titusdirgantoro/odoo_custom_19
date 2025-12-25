@@ -15,3 +15,8 @@ from . import supplier_service
 from . import res_partner
 from . import product
 from . import project_project
+from . import project_master_line_mixin
+from . import project_rap
+from . import project_pekerjaan
+from . import project_sub_pekerjaan
+from . import project_master_lines

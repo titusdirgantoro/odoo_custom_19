@@ -43,6 +43,11 @@ khusus untuk kebutuhan konstruksi.
         'views/equipment_category_views.xml',
         'views/usage_category_views.xml',
         'views/product_views.xml',
+        'views/project_rap_views.xml',
+        'views/project_pekerjaan_views.xml',
+        'views/project_sub_pekerjaan_views.xml',
+        'wizard/project_rap_copy_wizard_views.xml',
+        
         'views/construction_menus.xml',
     ],
     'installable': True,

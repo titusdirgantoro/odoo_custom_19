@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_project_rap_copy_wizard_form" model="ir.ui.view">
+            <field name="name">project.rap.copy.wizard.form</field>
+            <field name="model">project.rap.copy.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Copy RAP/PFC">
+                    <group>
+                        <field name="source_rap_id"/>
+                        <field name="target_project_id"/>
+                        <field name="target_type"/>
+                        <field name="new_name"/>
+                    </group>
+                    <footer>
+                        <button name="action_copy" type="object" class="btn-primary" string="Create Copy"/>
+                        <button special="cancel" class="btn-secondary" string="Cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+    </data>
+</odoo>

@@ -34,6 +34,23 @@
             action="open_view_project_all_cons"
             sequence="10"
         />
+        
+        <menuitem id="menu_construction_rap_root"
+                  name="RAP &amp; PFC"
+                  parent="menu_construction_root"
+                  sequence="15"/>
+
+        <menuitem id="menu_construction_rap"
+                  name="RAP"
+                  parent="menu_construction_rap_root"
+                  action="construction.action_project_rap"
+                  sequence="10"/>
+
+        <menuitem id="menu_construction_pfc"
+                  name="PFC"
+                  parent="menu_construction_rap_root"
+                  action="construction.action_project_pfc"
+                  sequence="20"/>
 
         <menuitem
             id="menu_construction_configuration"
@@ -252,6 +269,17 @@
             parent="menu_construction_configuration"
             sequence="65"
         />
+        <menuitem id="menu_construction_pekerjaan"
+                  name="Pekerjaan"
+                  parent="menu_construction_configuration"
+                  action="construction.action_project_pekerjaan"
+                  sequence="70"/>
+
+        <menuitem id="menu_construction_sub_pekerjaan"
+                  name="Sub Pekerjaan"
+                  parent="menu_construction_configuration"
+                  action="construction.action_project_sub_pekerjaan"
+                  sequence="75"/>
 
         <menuitem
             id="menu_construction_material_group"

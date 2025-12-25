@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="action_project_sub_pekerjaan" model="ir.actions.act_window">
+            <field name="name">Sub Pekerjaan</field>
+            <field name="res_model">project.sub.pekerjaan</field>
+            <field name="view_mode">list,form</field>
+        </record>
+
+        <record id="view_project_sub_pekerjaan_tree" model="ir.ui.view">
+            <field name="name">project.sub.pekerjaan.list</field>
+            <field name="model">project.sub.pekerjaan</field>
+            <field name="arch" type="xml">
+                <list>
+                    <field name="pekerjaan_id"/>
+                    <field name="name"/>
+                    <field name="uom_id"/>
+                    <field name="volume"/>
+                    <field name="total_harga"/>
+                </list>
+            </field>
+        </record>
+
+        <!-- Form: semua O2M jadi PAGE -->
+        <record id="view_project_sub_pekerjaan_form" model="ir.ui.view">
+            <field name="name">project.sub.pekerjaan.form</field>
+            <field name="model">project.sub.pekerjaan</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="pekerjaan_id"/>
+                            <field name="name"/>
+                            <field name="uom_id"/>
+                            <field name="volume"/>
+                            <field name="total_harga" readonly="1"/>
+                            <field name="id" invisible="1"/>
+                            <field name="rap_state" invisible="1"/>
+                        </group>
+
+                        <notebook>
+                            <page string="Bahan">
+                                <field name="master_bahan_ids"
+                                       context="{'default_sub_pekerjaan_id': id}"
+                                       readonly="rap_state == 'approved'">
+                                    <list editable="bottom">
+                                        <field name="product_id"/>
+                                        <field name="code" readonly="1"/>
+                                        <field name="uom_id" readonly="1"/>
+                                        <field name="volume"/>
+                                        <field name="harga_satuan"/>
+                                        <field name="total_harga" readonly="1"/>
+                                    </list>
+                                </field>
+                            </page>
+
+                            <page string="Upah">
+                                <field name="master_upah_ids"
+                                       context="{'default_sub_pekerjaan_id': id}"
+                                       readonly="rap_state == 'approved'">
+                                    <list editable="bottom">
+                                        <field name="product_id"/>
+                                        <field name="code" readonly="1"/>
+                                        <field name="uom_id" readonly="1"/>
+                                        <field name="volume"/>
+                                        <field name="harga_satuan"/>
+                                        <field name="total_harga" readonly="1"/>
+                                    </list>
+                                </field>
+                            </page>
+
+                            <page string="Sewa Alat">
+                                <field name="master_sewa_alat_ids"
+                                       context="{'default_sub_pekerjaan_id': id}"
+                                       readonly="rap_state == 'approved'">
+                                    <list editable="bottom">
+                                        <field name="product_id"/>
+                                        <field name="code" readonly="1"/>
+                                        <field name="uom_id" readonly="1"/>
+                                        <field name="volume"/>
+                                        <field name="harga_satuan"/>
+                                        <field name="total_harga" readonly="1"/>
+                                    </list>
+                                </field>
+                            </page>
+
+                            <page string="Overhead">
+                                <field name="master_overhead_ids"
+                                       context="{'default_sub_pekerjaan_id': id}"
+                                       readonly="rap_state == 'approved'">
+                                    <list editable="bottom">
+                                        <field name="product_id"/>
+                                        <field name="code" readonly="1"/>
+                                        <field name="uom_id" readonly="1"/>
+                                        <field name="volume"/>
+                                        <field name="harga_satuan"/>
+                                        <field name="total_harga" readonly="1"/>
+                                    </list>
+                                </field>
+                            </page>
+
+                            <page string="Jasa">
+                                <field name="master_jasa_ids"
+                                       context="{'default_sub_pekerjaan_id': id}"
+                                       readonly="rap_state == 'approved'">
+                                    <list editable="bottom">
+                                        <field name="product_id"/>
+                                        <field name="code" readonly="1"/>
+                                        <field name="uom_id" readonly="1"/>
+                                        <field name="volume"/>
+                                        <field name="harga_satuan"/>
+                                        <field name="total_harga" readonly="1"/>
+                                    </list>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+    </data>
+</odoo>

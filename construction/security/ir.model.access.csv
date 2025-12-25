@@ -12,3 +12,15 @@ access_construction_overhead_type_user,access_construction_overhead_type_user,mo
 access_construction_service_category_user,access_construction_service_category_user,model_construction_service_category,base.group_user,1,1,1,1
 access_construction_equipment_category_user,access_construction_equipment_category_user,model_construction_equipment_category,base.group_user,1,1,1,1
 access_construction_usage_category_user,access_construction_usage_category_user,model_construction_usage_category,base.group_user,1,1,1,1
+
+access_project_rap_user,project.rap user,model_project_rap,base.group_user,1,1,1,1
+access_project_pekerjaan_user,project.pekerjaan user,model_project_pekerjaan,base.group_user,1,1,1,1
+access_project_sub_pekerjaan_user,project.sub.pekerjaan user,model_project_sub_pekerjaan,base.group_user,1,1,1,1
+
+access_project_master_bahan_user,project.master.bahan user,model_project_master_bahan,base.group_user,1,1,1,1
+access_project_master_upah_user,project.master.upah user,model_project_master_upah,base.group_user,1,1,1,1
+access_project_master_sewa_alat_user,project.master.sewa.alat user,model_project_master_sewa_alat,base.group_user,1,1,1,1
+access_project_master_overhead_user,project.master.overhead user,model_project_master_overhead,base.group_user,1,1,1,1
+access_project_master_jasa_user,project.master.jasa user,model_project_master_jasa,base.group_user,1,1,1,1
+
+access_project_rap_copy_wizard,project.rap.copy.wizard user,model_project_rap_copy_wizard,base.group_user,1,1,1,1
