@@ -35,6 +35,7 @@
                             <field name="uom_id"/>
                             <field name="volume"/>
                             <field name="total_harga" readonly="1"/>
+                            <field name="template_id" invisible="1"/>
                             <field name="id" invisible="1"/>
                             <field name="rap_state" invisible="1"/>
                         </group>

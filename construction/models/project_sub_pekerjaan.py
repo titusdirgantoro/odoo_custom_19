@@ -1,4 +1,4 @@
-    # -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError
 
@@ -14,18 +14,24 @@ class ProjectSubPekerjaan(models.Model):
         store=True,
         readonly=True,
     )
+
+    template_id = fields.Many2one(
+        'construction.sub.pekerjaan.template',
+        string='Sub Pekerjaan Template',
+        copy=False,
+        index=True,
+    )
     name = fields.Char(required=True, copy=True)
-    uom_id = fields.Many2one("uom.uom", copy=True)
+    uom_id = fields.Many2one("uom.uom", string="UoM", copy=True)
     volume = fields.Float(default=1.0, copy=True)
 
-    # === One2many detail (semua akan jadi PAGE di view) ===
     master_bahan_ids = fields.One2many("project.master.bahan", "sub_pekerjaan_id", copy=True)
     master_upah_ids = fields.One2many("project.master.upah", "sub_pekerjaan_id", copy=True)
     master_sewa_alat_ids = fields.One2many("project.master.sewa.alat", "sub_pekerjaan_id", copy=True)
     master_overhead_ids = fields.One2many("project.master.overhead", "sub_pekerjaan_id", copy=True)
     master_jasa_ids = fields.One2many("project.master.jasa", "sub_pekerjaan_id", copy=True)
 
-    total_harga = fields.Float(compute="_compute_total_harga", store=True, readonly=True)
+    total_harga = fields.Float(compute="_compute_total_harga", store=True)
 
     @api.depends(
         "master_bahan_ids.total_harga",
@@ -36,13 +42,13 @@ class ProjectSubPekerjaan(models.Model):
     )
     def _compute_total_harga(self):
         for rec in self:
-            total = 0.0
-            total += sum(rec.master_bahan_ids.mapped("total_harga"))
-            total += sum(rec.master_upah_ids.mapped("total_harga"))
-            total += sum(rec.master_sewa_alat_ids.mapped("total_harga"))
-            total += sum(rec.master_overhead_ids.mapped("total_harga"))
-            total += sum(rec.master_jasa_ids.mapped("total_harga"))
-            rec.total_harga = total
+            rec.total_harga = (
+                sum(rec.master_bahan_ids.mapped("total_harga"))
+                + sum(rec.master_upah_ids.mapped("total_harga"))
+                + sum(rec.master_sewa_alat_ids.mapped("total_harga"))
+                + sum(rec.master_overhead_ids.mapped("total_harga"))
+                + sum(rec.master_jasa_ids.mapped("total_harga"))
+            )
 
     def _ensure_parent_editable(self):
         for rec in self:

@@ -25,13 +25,20 @@ class ProjectMasterLineMixin(models.AbstractModel):
         copy=True,
     )
 
+    template_line_id = fields.Many2one(
+        'construction.sub.template.line',
+        string='Template Line',
+        copy=False,
+        readonly=True,
+    )
+
     code = fields.Char(related="product_id.default_code", store=True, readonly=True)
-    uom_id = fields.Many2one(related="product_id.uom_id", store=True, readonly=True)
+    uom_id = fields.Many2one("uom.uom", related="product_id.uom_id", store=True, readonly=True)
 
     volume = fields.Float(default=1.0, copy=True)
     harga_satuan = fields.Float(default=0.0, copy=True)
 
-    total_harga = fields.Float(compute="_compute_total_harga", store=True, readonly=True)
+    total_harga = fields.Float(compute="_compute_total_harga", store=True)
 
     @api.depends("volume", "harga_satuan")
     def _compute_total_harga(self):

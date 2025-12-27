@@ -23,4 +23,10 @@ access_project_master_sewa_alat_user,project.master.sewa.alat user,model_project
 access_project_master_overhead_user,project.master.overhead user,model_project_master_overhead,base.group_user,1,1,1,1
 access_project_master_jasa_user,project.master.jasa user,model_project_master_jasa,base.group_user,1,1,1,1
 
+access_construction_pekerjaan_template_user,construction.pekerjaan.template user,model_construction_pekerjaan_template,base.group_user,1,1,1,1
+access_construction_sub_pekerjaan_template_user,construction.sub.pekerjaan.template user,model_construction_sub_pekerjaan_template,base.group_user,1,1,1,1
+access_construction_sub_template_line_user,construction.sub.template.line user,model_construction_sub_template_line,base.group_user,1,1,1,1
+
+access_project_rap_import_template,project.rap.import.template user,model_project_rap_import_template,base.group_user,1,1,1,1
+access_project_rap_save_as_template,project.rap.save.as.template user,model_project_rap_save_as_template,base.group_user,1,1,1,1
 access_project_rap_copy_wizard,project.rap.copy.wizard user,model_project_rap_copy_wizard,base.group_user,1,1,1,1

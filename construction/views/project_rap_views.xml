@@ -2,9 +2,22 @@
 <odoo>
     <data>
 
-        
+        <record id="action_project_rap" model="ir.actions.act_window">
+            <field name="name">RAP</field>
+            <field name="res_model">project.rap</field>
+            <field name="view_mode">list,form</field>
+            <field name="domain">[('type', '=', 'rap')]</field>
+            <field name="context">{'default_type': 'rap'}</field>
+        </record>
 
-        <!-- list -->
+        <record id="action_project_pfc" model="ir.actions.act_window">
+            <field name="name">PFC</field>
+            <field name="res_model">project.rap</field>
+            <field name="view_mode">list,form</field>
+            <field name="domain">[('type', '=', 'pfc')]</field>
+            <field name="context">{'default_type': 'pfc'}</field>
+        </record>
+
         <record id="view_project_rap_tree" model="ir.ui.view">
             <field name="name">project.rap.list</field>
             <field name="model">project.rap</field>
@@ -20,7 +33,6 @@
             </field>
         </record>
 
-        <!-- Form -->
         <record id="view_project_rap_form" model="ir.ui.view">
             <field name="name">project.rap.form</field>
             <field name="model">project.rap</field>
@@ -33,6 +45,12 @@
                                 class="btn-primary" invisible="state != 'request_approval'"/>
                         <button name="action_set_draft" type="object" string="Reset to Draft"
                                 class="btn-secondary" invisible="state == 'draft'"/>
+
+                        <button name="action_open_import_template_wizard" type="object" string="Add from Template"
+                                class="btn-secondary" invisible="state == 'approved' or id == False"/>
+                        <button name="action_open_save_as_template_wizard" type="object" string="Save as Template"
+                                class="btn-secondary" invisible="id == False"/>
+
                         <button name="action_open_copy_wizard" type="object" string="Copy to Another Project"
                                 class="btn-secondary" invisible="id == False"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,request_approval,approved"/>
@@ -44,23 +62,17 @@
                                 <field name="name"/>
                                 <field name="type"/>
                                 <field name="project_id"/>
-                                <field name="project_manager_id" readonly="1"/>
                             </group>
                             <group>
                                 <field name="nilai_kontrak" readonly="1"/>
                                 <field name="total_nilai_rap" readonly="1"/>
                                 <field name="selisih_kon_rap" readonly="1"/>
-                                <field name="total_realisasi"/>
-                                <field name="id" invisible="1"/>
                             </group>
                         </group>
 
                         <notebook>
-                            <!-- O2M page -->
                             <page string="Pekerjaan">
-                                <field name="pekerjaan_ids"
-                                       context="{'default_rap_id': id}"
-                                       readonly="state == 'approved'">
+                                <field name="pekerjaan_ids" context="{'default_rap_id': id}" readonly="state == 'approved'">
                                     <list create="1" edit="1" delete="1">
                                         <field name="code"/>
                                         <field name="name"/>
@@ -74,7 +86,7 @@
                                     <field name="user_request_id" readonly="1"/>
                                     <field name="user_approve_id" readonly="1"/>
                                     <field name="tanggal_disetujui" readonly="1"/>
-                                    <field name="comment"/>
+                                    <field name="comment" readonly="state == 'approved'"/>
                                 </group>
                             </page>
 
@@ -85,24 +97,6 @@
                     </sheet>
                 </form>
             </field>
-        </record>
-
-        <!-- Action RAP -->
-        <record id="action_project_rap" model="ir.actions.act_window">
-            <field name="name">RAP</field>
-            <field name="res_model">project.rap</field>
-            <field name="view_mode">list,form</field>
-            <field name="domain">[('type','=','rap')]</field>
-            <field name="context">{'default_type':'rap'}</field>
-        </record>
-
-        <!-- Action PFC -->
-        <record id="action_project_pfc" model="ir.actions.act_window">
-            <field name="name">PFC</field>
-            <field name="res_model">project.rap</field>
-            <field name="view_mode">list,form</field>
-            <field name="domain">[('type','=','pfc')]</field>
-            <field name="context">{'default_type':'pfc'}</field>
         </record>
 
     </data>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_project_rap_save_as_template_wizard_form" model="ir.ui.view">
+            <field name="name">project.rap.save.as.template.wizard.form</field>
+            <field name="model">project.rap.save.as.template</field>
+            <field name="arch" type="xml">
+                <form string="Save as Template">
+                    <sheet>
+                        <group>
+                            <field name="source_rap_id" invisible="1"/>
+                            <field name="template_name"/>
+                            <field name="template_code_prefix"/>
+                        </group>
+                        <group>
+                            <field name="scope"/>
+                            <field name="pekerjaan_ids" widget="many2many_tags" invisible="scope != 'selected'"/>
+                            <field name="price_policy"/>
+                        </group>
+                    </sheet>
+                    <footer>
+                        <button name="action_save" type="object" string="Create Template" class="btn-primary"/>
+                        <button string="Cancel" special="cancel" class="btn-secondary"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+    </data>
+</odoo>

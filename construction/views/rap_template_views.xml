@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Actions -->
+        <record id="action_construction_pekerjaan_template" model="ir.actions.act_window">
+            <field name="name">Pekerjaan Templates</field>
+            <field name="res_model">construction.pekerjaan.template</field>
+            <field name="view_mode">list,form</field>
+        </record>
+
+        <record id="action_construction_sub_pekerjaan_template" model="ir.actions.act_window">
+            <field name="name">Sub Pekerjaan Templates</field>
+            <field name="res_model">construction.sub.pekerjaan.template</field>
+            <field name="view_mode">list,form</field>
+        </record>
+
+        <!-- Pekerjaan Template List -->
+        <record id="view_construction_pekerjaan_template_list" model="ir.ui.view">
+            <field name="name">construction.pekerjaan.template.list</field>
+            <field name="model">construction.pekerjaan.template</field>
+            <field name="arch" type="xml">
+                <list>
+                    <field name="code"/>
+                    <field name="name"/>
+                    <field name="company_id"/>
+                    <field name="active"/>
+                </list>
+            </field>
+        </record>
+
+        <!-- Pekerjaan Template Form -->
+        <record id="view_construction_pekerjaan_template_form" model="ir.ui.view">
+            <field name="name">construction.pekerjaan.template.form</field>
+            <field name="model">construction.pekerjaan.template</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="code"/>
+                                <field name="name"/>
+                            </group>
+                            <group>
+                                <field name="company_id"/>
+                                <field name="active"/>
+                            </group>
+                        </group>
+
+                        <notebook>
+                            <page string="Sub Pekerjaan">
+                                <field name="sub_template_ids">
+                                    <list editable="bottom">
+                                        <field name="sequence"/>
+                                        <field name="name"/>
+                                        <field name="uom_id"/>
+                                        <field name="default_volume"/>
+                                    </list>
+                                </field>
+                            </page>
+
+                            <page string="Notes">
+                                <field name="notes"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Sub Pekerjaan Template List -->
+        <record id="view_construction_sub_pekerjaan_template_list" model="ir.ui.view">
+            <field name="name">construction.sub.pekerjaan.template.list</field>
+            <field name="model">construction.sub.pekerjaan.template</field>
+            <field name="arch" type="xml">
+                <list>
+                    <field name="pekerjaan_template_id"/>
+                    <field name="sequence"/>
+                    <field name="name"/>
+                    <field name="uom_id"/>
+                    <field name="default_volume"/>
+                </list>
+            </field>
+        </record>
+
+        <!-- Sub Pekerjaan Template Form -->
+        <record id="view_construction_sub_pekerjaan_template_form" model="ir.ui.view">
+            <field name="name">construction.sub.pekerjaan.template.form</field>
+            <field name="model">construction.sub.pekerjaan.template</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="pekerjaan_template_id"/>
+                                <field name="sequence"/>
+                            </group>
+                            <group>
+                                <field name="name"/>
+                                <field name="uom_id"/>
+                                <field name="default_volume"/>
+                            </group>
+                        </group>
+
+                        <notebook>
+                            <page string="Lines">
+                                <field name="line_ids">
+                                    <list editable="bottom">
+                                        <field name="type_master_data" readonly="1"/>
+                                        <field name="product_id" domain="[('type_master_data','!=',False)]"/>
+                                        <field name="code" readonly="1"/>
+                                        <field name="uom_id" readonly="1"/>
+                                        <field name="volume"/>
+                                        <field name="harga_satuan_default"/>
+                                    </list>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+    </data>
+</odoo>

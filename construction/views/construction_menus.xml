@@ -52,6 +52,8 @@
                   action="construction.action_project_pfc"
                   sequence="20"/>
 
+        
+
         <menuitem
             id="menu_construction_configuration"
             name="Configuration"
@@ -269,17 +271,25 @@
             parent="menu_construction_configuration"
             sequence="65"
         />
-        <menuitem id="menu_construction_pekerjaan"
-                  name="Pekerjaan"
-                  parent="menu_construction_configuration"
-                  action="construction.action_project_pekerjaan"
-                  sequence="70"/>
 
-        <menuitem id="menu_construction_sub_pekerjaan"
-                  name="Sub Pekerjaan"
+        <menuitem id="menu_construction_rap_template_root"
+                  name="RAP Templates"
                   parent="menu_construction_configuration"
-                  action="construction.action_project_sub_pekerjaan"
-                  sequence="75"/>
+                  sequence="1"/>
+
+        <menuitem id="menu_construction_pekerjaan_template"
+                  name="Pekerjaan Templates"
+                  parent="menu_construction_rap_template_root"
+                  action="construction.action_construction_pekerjaan_template"
+                  sequence="10"/>
+
+        <menuitem id="menu_construction_sub_pekerjaan_template"
+                  name="Sub Pekerjaan Templates"
+                  parent="menu_construction_rap_template_root"
+                  action="construction.action_construction_sub_pekerjaan_template"
+                  sequence="20"/>
+
+        
 
         <menuitem
             id="menu_construction_material_group"

@@ -14,15 +14,22 @@ class ProjectPekerjaan(models.Model):
         store=True,
         readonly=True,
     )
+
+    template_id = fields.Many2one(
+        'construction.pekerjaan.template',
+        string='Pekerjaan Template',
+        copy=False,
+        index=True,
+    )
     name = fields.Char(required=True, copy=True)
-    code = fields.Char(copy=True)
+    code = fields.Char(required=True, copy=True, index=True)
 
     sub_pekerjaan_ids = fields.One2many("project.sub.pekerjaan", "pekerjaan_id", copy=True)
 
-    total_harga = fields.Float(compute="_compute_total_harga", store=True, readonly=True)
+    total_harga = fields.Float(compute="_compute_total_harga", store=True)
 
     _sql_constraints = [
-        ("code_uniq_per_rap", "unique(rap_id, code)", "Code Pekerjaan harus unik per dokumen."),
+        ("uniq_rap_code", "unique(rap_id, code)", "Code pekerjaan harus unik dalam 1 dokumen RAP/PFC."),
     ]
 
     @api.depends("sub_pekerjaan_ids.total_harga")

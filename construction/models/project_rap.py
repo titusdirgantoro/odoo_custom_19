@@ -23,11 +23,11 @@ class ProjectRap(models.Model):
 
     pekerjaan_ids = fields.One2many("project.pekerjaan", "rap_id", copy=True)
 
-    total_nilai_rap = fields.Float(compute="_compute_total", store=True, readonly=True)
-    selisih_kon_rap = fields.Float(compute="_compute_total", store=True, readonly=True)
+    total_nilai_rap = fields.Float(compute="_compute_total", store=True)
+    selisih_kon_rap = fields.Float(compute="_compute_total", store=True)
 
-    total_realisasi = fields.Float(default=0.0, copy=False)
-    notes = fields.Text(copy=True)
+    total_realisasi = fields.Float(default=0.0)
+    notes = fields.Text()
 
     state = fields.Selection(
         [
@@ -36,8 +36,10 @@ class ProjectRap(models.Model):
             ("approved", "Approved"),
         ],
         default="draft",
+        tracking=True,
         copy=False,
     )
+
     user_request_id = fields.Many2one("res.users", readonly=True, copy=False)
     user_approve_id = fields.Many2one("res.users", readonly=True, copy=False)
     tanggal_disetujui = fields.Datetime(readonly=True, copy=False)
@@ -50,30 +52,36 @@ class ProjectRap(models.Model):
             rec.total_nilai_rap = total
             rec.selisih_kon_rap = (rec.nilai_kontrak or 0.0) - total
 
-    # === workflow ===
     def action_request_approval(self):
         for rec in self:
             if not rec.pekerjaan_ids:
-                raise UserError(_("Tidak bisa Request Approval: belum ada Pekerjaan."))
-            rec.user_request_id = self.env.user.id
-            rec.state = "request_approval"
+                raise UserError(_("Tidak bisa Request Approval tanpa pekerjaan."))
+            rec.write(
+                {
+                    "state": "request_approval",
+                    "user_request_id": self.env.user.id,
+                }
+            )
 
     def action_approve(self):
         for rec in self:
-            # Ganti rule group sesuai kebutuhanmu (misal group custom)
+            if rec.state != "request_approval":
+                continue
+            # NOTE: ini masih rule sederhana, silakan sesuaikan group/flow approval sesuai kebutuhan
             if not self.env.user.has_group("base.group_system"):
-                raise UserError(_("Hanya user tertentu yang boleh Approve (silakan sesuaikan group)."))
-            rec.user_approve_id = self.env.user.id
-            rec.tanggal_disetujui = fields.Datetime.now()
-            rec.state = "approved"
+                raise UserError(_("Hanya Administrator yang bisa approve dokumen ini."))
+            rec.write(
+                {
+                    "state": "approved",
+                    "user_approve_id": self.env.user.id,
+                    "tanggal_disetujui": fields.Datetime.now(),
+                }
+            )
 
     def action_set_draft(self):
         for rec in self:
-            if rec.state == "approved" and not self.env.user.has_group("base.group_system"):
-                raise UserError(_("Hanya user tertentu yang boleh Reset dari Approved."))
-            rec.state = "draft"
+            rec.write({"state": "draft"})
 
-    # === copy wizard ===
     def action_open_copy_wizard(self):
         self.ensure_one()
         return {
@@ -86,6 +94,38 @@ class ProjectRap(models.Model):
                 "default_source_rap_id": self.id,
                 "default_target_type": self.type,
                 "default_new_name": f"{self.name} (Copy)",
+            },
+        }
+
+    def action_open_import_template_wizard(self):
+        self.ensure_one()
+        if not self.id:
+            raise UserError(_("Silakan simpan dokumen terlebih dahulu."))
+        if self.state == "approved":
+            raise UserError(_("Dokumen RAP/PFC sudah Approved, tidak bisa diubah."))
+        return {
+            "type": "ir.actions.act_window",
+            "name": _("Add from Template"),
+            "res_model": "project.rap.import.template",
+            "view_mode": "form",
+            "target": "new",
+            "context": {
+                "default_rap_id": self.id,
+            },
+        }
+
+    def action_open_save_as_template_wizard(self):
+        self.ensure_one()
+        if not self.id:
+            raise UserError(_("Silakan simpan dokumen terlebih dahulu."))
+        return {
+            "type": "ir.actions.act_window",
+            "name": _("Save as Template"),
+            "res_model": "project.rap.save.as.template",
+            "view_mode": "form",
+            "target": "new",
+            "context": {
+                "default_source_rap_id": self.id,
             },
         }
 
