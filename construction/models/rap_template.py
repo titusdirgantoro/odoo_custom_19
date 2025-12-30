@@ -22,7 +22,7 @@ class ConstructionPekerjaanTemplate(models.Model):
     )
 
     _sql_constraints = [
-        ("construction_pekerjaan_template_code_uniq", "unique(code, company_id)", "Code template harus unik per company."),
+        ("construction_pekerjaan_template_code_name_uniq", "unique(code, name)", "Code dan Name template harus unik."),
     ]
 
     def name_get(self):
@@ -83,7 +83,7 @@ class ConstructionSubTemplateLine(models.Model):
     )
 
     product_id = fields.Many2one(
-        "product.product",
+        "product.template",
         string="Item",
         required=True,
         index=True,

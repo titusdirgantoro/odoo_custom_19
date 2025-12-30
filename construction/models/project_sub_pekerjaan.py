@@ -24,14 +24,21 @@ class ProjectSubPekerjaan(models.Model):
     name = fields.Char(required=True, copy=True)
     uom_id = fields.Many2one("uom.uom", string="UoM", copy=True)
     volume = fields.Float(default=1.0, copy=True)
+    harga_satuan = fields.Float(default=0.0, copy=True)
 
     master_bahan_ids = fields.One2many("project.master.bahan", "sub_pekerjaan_id", copy=True)
     master_upah_ids = fields.One2many("project.master.upah", "sub_pekerjaan_id", copy=True)
     master_sewa_alat_ids = fields.One2many("project.master.sewa.alat", "sub_pekerjaan_id", copy=True)
     master_overhead_ids = fields.One2many("project.master.overhead", "sub_pekerjaan_id", copy=True)
     master_jasa_ids = fields.One2many("project.master.jasa", "sub_pekerjaan_id", copy=True)
+    
+    total_harga = fields.Float(string="Total Harga", compute="_compute_total_harga", store=True)
+    total_harga_rap = fields.Float(string="Total Harga RAP", compute="_compute_total_harga_rap", store=True)
 
-    total_harga = fields.Float(compute="_compute_total_harga", store=True)
+    @api.depends('harga_satuan', 'volume')
+    def _compute_total_harga(self):
+        for rec in self:
+            rec.total_harga = rec.volume * rec.harga_satuan
 
     @api.depends(
         "master_bahan_ids.total_harga",
@@ -40,9 +47,9 @@ class ProjectSubPekerjaan(models.Model):
         "master_overhead_ids.total_harga",
         "master_jasa_ids.total_harga",
     )
-    def _compute_total_harga(self):
+    def _compute_total_harga_rap(self):
         for rec in self:
-            rec.total_harga = (
+            rec.total_harga_rap = (
                 sum(rec.master_bahan_ids.mapped("total_harga"))
                 + sum(rec.master_upah_ids.mapped("total_harga"))
                 + sum(rec.master_sewa_alat_ids.mapped("total_harga"))

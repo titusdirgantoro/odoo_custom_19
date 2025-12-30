@@ -8,7 +8,7 @@ class ProjectMasterBahan(models.Model):
     _inherit = "project.master.line.mixin"
 
     product_id = fields.Many2one(
-        "product.product",
+        "product.template",
         required=True,
         domain=[("type_master_data", "=", "bahan")],
     )
@@ -20,7 +20,7 @@ class ProjectMasterUpah(models.Model):
     _inherit = "project.master.line.mixin"
 
     product_id = fields.Many2one(
-        "product.product",
+        "product.template",
         required=True,
         domain=[("type_master_data", "=", "upah")],
     )
@@ -32,7 +32,7 @@ class ProjectMasterSewaAlat(models.Model):
     _inherit = "project.master.line.mixin"
 
     product_id = fields.Many2one(
-        "product.product",
+        "product.template",
         required=True,
         domain=[("type_master_data", "=", "sewa_alat")],
     )
@@ -44,7 +44,7 @@ class ProjectMasterOverhead(models.Model):
     _inherit = "project.master.line.mixin"
 
     product_id = fields.Many2one(
-        "product.product",
+        "product.template",
         required=True,
         domain=[("type_master_data", "=", "overhead")],
     )
@@ -56,7 +56,7 @@ class ProjectMasterJasa(models.Model):
     _inherit = "project.master.line.mixin"
 
     product_id = fields.Many2one(
-        "product.product",
+        "product.template",
         required=True,
         domain=[("type_master_data", "=", "jasa")],
     )

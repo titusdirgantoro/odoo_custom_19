@@ -18,7 +18,7 @@ class ProjectMasterLineMixin(models.AbstractModel):
     )
 
     product_id = fields.Many2one(
-        "product.product",
+        "product.template",
         string="Item",
         required=True,
         index=True,
@@ -39,6 +39,11 @@ class ProjectMasterLineMixin(models.AbstractModel):
     harga_satuan = fields.Float(default=0.0, copy=True)
 
     total_harga = fields.Float(compute="_compute_total_harga", store=True)
+
+    @api.onchange('product_id')
+    def onchange_product_id(self):
+        for rec in self:
+            rec.harga_satuan = rec.product_id.construction_price
 
     @api.depends("volume", "harga_satuan")
     def _compute_total_harga(self):

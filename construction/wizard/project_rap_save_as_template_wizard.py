@@ -9,8 +9,8 @@ class ProjectRapSaveAsTemplateWizard(models.TransientModel):
 
     source_rap_id = fields.Many2one("project.rap", required=True, readonly=True)
 
-    template_name = fields.Char(string="Template Name (Prefix)", required=True)
-    template_code_prefix = fields.Char(string="Template Code Prefix")
+    template_name = fields.Char(string="Template Name (Prefix)", required=False)
+    template_code_prefix = fields.Char(string="Template Code Prefix", required=True)
 
     scope = fields.Selection(
         [("all", "All Pekerjaan"), ("selected", "Selected Pekerjaan")],
@@ -82,10 +82,10 @@ class ProjectRapSaveAsTemplateWizard(models.TransientModel):
         for p in pekerjaan_tx:
             # name & code
             multiple = len(pekerjaan_tx) > 1
-            tmpl_name = self.template_name if not multiple else f"{self.template_name} - {p.code or p.name}"
+            tmpl_name = self.template_code_prefix if not multiple else f"{self.template_code_prefix} - {p.name or p.code}"
             base_code = self.template_code_prefix or p.code or "TEMPLATE"
             if multiple:
-                base_code = f"{base_code}-{p.code or p.id}"
+                base_code = f"{base_code}-{p.name or p.code}"
 
             tmpl_code = self._unique_template_code(base_code, rap.project_id.company_id.id if rap.project_id.company_id else self.env.company.id)
 

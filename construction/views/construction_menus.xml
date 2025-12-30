@@ -28,27 +28,29 @@
         </record>
 
         <menuitem
-            id="menu_construction_project"
+            id="menu_construction_project_root"
             name="Project"
             parent="menu_construction_root"
+            sequence="10"
+        />
+
+        <menuitem
+            id="menu_construction_project"
+            name="Project"
+            parent="menu_construction_project_root"
             action="open_view_project_all_cons"
             sequence="10"
         />
-        
-        <menuitem id="menu_construction_rap_root"
-                  name="RAP &amp; PFC"
-                  parent="menu_construction_root"
-                  sequence="15"/>
 
         <menuitem id="menu_construction_rap"
                   name="RAP"
-                  parent="menu_construction_rap_root"
+                  parent="menu_construction_project_root"
                   action="construction.action_project_rap"
                   sequence="10"/>
 
         <menuitem id="menu_construction_pfc"
                   name="PFC"
-                  parent="menu_construction_rap_root"
+                  parent="menu_construction_project_root"
                   action="construction.action_project_pfc"
                   sequence="20"/>
 

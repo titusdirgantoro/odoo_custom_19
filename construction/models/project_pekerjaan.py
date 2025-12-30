@@ -26,7 +26,7 @@ class ProjectPekerjaan(models.Model):
 
     sub_pekerjaan_ids = fields.One2many("project.sub.pekerjaan", "pekerjaan_id", copy=True)
 
-    total_harga = fields.Float(compute="_compute_total_harga", store=True)
+    total_harga = fields.Float(string="Total Harga Pekerjaan",compute="_compute_total_harga", store=True)
 
     _sql_constraints = [
         ("uniq_rap_code", "unique(rap_id, code)", "Code pekerjaan harus unik dalam 1 dokumen RAP/PFC."),

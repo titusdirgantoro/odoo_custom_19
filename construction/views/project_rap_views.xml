@@ -74,10 +74,131 @@
                             <page string="Pekerjaan">
                                 <field name="pekerjaan_ids" context="{'default_rap_id': id}" readonly="state == 'approved'">
                                     <list create="1" edit="1" delete="1">
+                                        <field name="rap_id" column_invisible="1"/>
                                         <field name="code"/>
                                         <field name="name"/>
                                         <field name="total_harga" readonly="1"/>
                                     </list>
+                                    <form>
+                                        <sheet>
+                                            <group>
+                                                <field name="code"/>
+                                                <field name="name"/>
+                                                <field name="total_harga" readonly="1"/>
+                                                <field name="template_id" invisible="1"/>
+                                                <field name="id" invisible="1" />
+                                                <field name="rap_state" invisible="1"/>
+                                            </group>
+
+                                            <notebook>
+                                                <page string="Sub Pekerjaan">
+                                                    <field name="sub_pekerjaan_ids"
+                                                        context="{'default_pekerjaan_id': id}"
+                                                        readonly="rap_state == 'approved'">
+                                                        <list create="1" edit="1" delete="1">
+                                                            <field name="name"/>
+                                                            <field name="uom_id"/>
+                                                            <field name="volume"/>
+                                                            <field name="total_harga" readonly="1"/>
+                                                        </list>
+                                                        <form>
+                                                            <sheet>
+                                                                <group>
+                                                                    <field name="pekerjaan_id" invisible="1"/>
+                                                                    <field name="name"/>
+                                                                    <field name="uom_id"/>
+                                                                    <field name="volume"/>
+                                                                    <field name="harga_satuan"/>
+                                                                    <field name="total_harga" readonly="1"/>
+                                                                    <field name="total_harga_rap" readonly="1"/>
+                                                                    <field name="template_id" invisible="1"/>
+                                                                    <field name="id" invisible="1"/>
+                                                                    <field name="rap_state" invisible="1"/>
+                                                                </group>
+
+                                                                <notebook>
+                                                                    <page string="Bahan">
+                                                                        <field name="master_bahan_ids"
+                                                                            context="{'default_sub_pekerjaan_id': id}"
+                                                                            readonly="rap_state == 'approved'">
+                                                                            <list editable="bottom">
+                                                                                <field name="product_id" context="{'default_type':'consu', 'default_type_master_data':'bahan'}"/>
+                                                                                <field name="code" readonly="1"/>
+                                                                                <field name="uom_id" readonly="1"/>
+                                                                                <field name="volume"/>
+                                                                                <field name="harga_satuan"/>
+                                                                                <field name="total_harga" readonly="1"/>
+                                                                            </list>
+                                                                        </field>
+                                                                    </page>
+
+                                                                    <page string="Upah">
+                                                                        <field name="master_upah_ids"
+                                                                            context="{'default_sub_pekerjaan_id': id}"
+                                                                            readonly="rap_state == 'approved'">
+                                                                            <list editable="bottom">
+                                                                                <field name="product_id" context="{'default_type':'service', 'default_type_master_data':'upah'}"/>
+                                                                                <field name="code" readonly="1"/>
+                                                                                <field name="uom_id" readonly="1"/>
+                                                                                <field name="volume"/>
+                                                                                <field name="harga_satuan"/>
+                                                                                <field name="total_harga" readonly="1"/>
+                                                                            </list>
+                                                                        </field>
+                                                                    </page>
+
+                                                                    <page string="Sewa Alat">
+                                                                        <field name="master_sewa_alat_ids"
+                                                                            context="{'default_sub_pekerjaan_id': id}"
+                                                                            readonly="rap_state == 'approved'">
+                                                                            <list editable="bottom">
+                                                                                <field name="product_id" context="{'default_type':'service', 'default_type_master_data':'sewa_alat'}"/>
+                                                                                <field name="code" readonly="1"/>
+                                                                                <field name="uom_id" readonly="1"/>
+                                                                                <field name="volume"/>
+                                                                                <field name="harga_satuan"/>
+                                                                                <field name="total_harga" readonly="1"/>
+                                                                            </list>
+                                                                        </field>
+                                                                    </page>
+
+                                                                    <page string="Overhead">
+                                                                        <field name="master_overhead_ids"
+                                                                            context="{'default_sub_pekerjaan_id': id}"
+                                                                            readonly="rap_state == 'approved'">
+                                                                            <list editable="bottom">
+                                                                                <field name="product_id" context="{'default_type':'service', 'default_type_master_data':'overhead'}"/>
+                                                                                <field name="code" readonly="1"/>
+                                                                                <field name="uom_id" readonly="1"/>
+                                                                                <field name="volume"/>
+                                                                                <field name="harga_satuan"/>
+                                                                                <field name="total_harga" readonly="1"/>
+                                                                            </list>
+                                                                        </field>
+                                                                    </page>
+
+                                                                    <page string="Jasa">
+                                                                        <field name="master_jasa_ids"
+                                                                            context="{'default_sub_pekerjaan_id': id}"
+                                                                            readonly="rap_state == 'approved'">
+                                                                            <list editable="bottom">
+                                                                                <field name="product_id" context="{'default_type':'service', 'default_type_master_data':'jasa'}"/>
+                                                                                <field name="code" readonly="1"/>
+                                                                                <field name="uom_id" readonly="1"/>
+                                                                                <field name="volume"/>
+                                                                                <field name="harga_satuan"/>
+                                                                                <field name="total_harga" readonly="1"/>
+                                                                            </list>
+                                                                        </field>
+                                                                    </page>
+                                                                </notebook>
+                                                            </sheet>
+                                                        </form>
+                                                    </field>
+                                                </page>
+                                            </notebook>
+                                        </sheet>
+                                    </form>
                                 </field>
                             </page>
 

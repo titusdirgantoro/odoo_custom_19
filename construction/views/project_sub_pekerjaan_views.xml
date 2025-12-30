@@ -34,7 +34,9 @@
                             <field name="name"/>
                             <field name="uom_id"/>
                             <field name="volume"/>
+                            <field name="harga_satuan"/>
                             <field name="total_harga" readonly="1"/>
+                            <field name="total_harga_rap" readonly="1"/>
                             <field name="template_id" invisible="1"/>
                             <field name="id" invisible="1"/>
                             <field name="rap_state" invisible="1"/>
@@ -46,7 +48,7 @@
                                        context="{'default_sub_pekerjaan_id': id}"
                                        readonly="rap_state == 'approved'">
                                     <list editable="bottom">
-                                        <field name="product_id"/>
+                                        <field name="product_id" context="{'default_type':'consu', 'default_type_master_data':'bahan'}"/>
                                         <field name="code" readonly="1"/>
                                         <field name="uom_id" readonly="1"/>
                                         <field name="volume"/>
@@ -61,7 +63,7 @@
                                        context="{'default_sub_pekerjaan_id': id}"
                                        readonly="rap_state == 'approved'">
                                     <list editable="bottom">
-                                        <field name="product_id"/>
+                                        <field name="product_id" context="{'default_type':'service', 'default_type_master_data':'upah'}"/>
                                         <field name="code" readonly="1"/>
                                         <field name="uom_id" readonly="1"/>
                                         <field name="volume"/>
@@ -76,7 +78,7 @@
                                        context="{'default_sub_pekerjaan_id': id}"
                                        readonly="rap_state == 'approved'">
                                     <list editable="bottom">
-                                        <field name="product_id"/>
+                                        <field name="product_id" context="{'default_type':'service', 'default_type_master_data':'sewa_alat'}"/>
                                         <field name="code" readonly="1"/>
                                         <field name="uom_id" readonly="1"/>
                                         <field name="volume"/>
@@ -91,7 +93,7 @@
                                        context="{'default_sub_pekerjaan_id': id}"
                                        readonly="rap_state == 'approved'">
                                     <list editable="bottom">
-                                        <field name="product_id"/>
+                                        <field name="product_id" context="{'default_type':'service', 'default_type_master_data':'overhead'}"/>
                                         <field name="code" readonly="1"/>
                                         <field name="uom_id" readonly="1"/>
                                         <field name="volume"/>
@@ -106,7 +108,7 @@
                                        context="{'default_sub_pekerjaan_id': id}"
                                        readonly="rap_state == 'approved'">
                                     <list editable="bottom">
-                                        <field name="product_id"/>
+                                        <field name="product_id" context="{'default_type':'service', 'default_type_master_data':'jasa'}"/>
                                         <field name="code" readonly="1"/>
                                         <field name="uom_id" readonly="1"/>
                                         <field name="volume"/>

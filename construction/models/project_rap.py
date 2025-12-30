@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError
-
+from odoo.exceptions import ValidationError
 
 class ProjectRap(models.Model):
     _name = "project.rap"
@@ -45,6 +45,21 @@ class ProjectRap(models.Model):
     tanggal_disetujui = fields.Datetime(readonly=True, copy=False)
     comment = fields.Text(copy=False)
 
+    @api.constrains("project_id", "type")
+    def _check_one_rap_per_project(self):
+        """Fallback + pesan lebih jelas (dan aman jika SQL partial unique tidak didukung)."""
+        for rec in self:
+            if rec.type != "rap" or not rec.project_id:
+                continue
+
+            cnt = self.search_count([
+                ("id", "!=", rec.id),
+                ("project_id", "=", rec.project_id.id),
+                ("type", "=", "rap"),
+            ])
+            if cnt:
+                raise ValidationError(_("Satu project hanya boleh memiliki 1 dokumen RAP."))
+            
     @api.depends("pekerjaan_ids.total_harga", "nilai_kontrak")
     def _compute_total(self):
         for rec in self:

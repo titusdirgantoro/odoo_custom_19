@@ -10,7 +10,7 @@
                     <sheet>
                         <group>
                             <field name="source_rap_id" invisible="1"/>
-                            <field name="template_name"/>
+                            <!-- <field name="template_name"/> -->
                             <field name="template_code_prefix"/>
                         </group>
                         <group>
