@@ -1,5 +1,7 @@
 from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError
+import logging
+_logger = logging.getLogger(__name__)
 class ProductTemplate(models.Model):
     _inherit = 'product.template'
 
@@ -145,6 +147,21 @@ class ProductTemplate(models.Model):
         help='Durasi minimum sewa dalam satuan yang dipilih.'
     )
 
+    @api.depends('name', 'default_code')
+    @api.depends_context('formatted_display_name')
+    def _compute_display_name(self):
+        for template in self:
+            if not template.name:
+                template.display_name = False
+            elif self.env.context.get('formatted_display_name'):
+                code_prefix = f'[{template.default_code}] ' if template.default_code else ''
+                level_sufix = f' - Level {template.product_level} ' if template.product_level else ''
+                template.display_name = f'{code_prefix}{template.name}{level_sufix}'
+            else:
+                code_prefix = f'[{template.default_code}] ' if template.default_code else ''
+                level_sufix = f' - Level {template.product_level} ' if template.product_level else ''
+                template.display_name = f'{code_prefix}{template.name}{level_sufix}'
+            
     @api.onchange('construction_product_type')
     def _onchange_construction_product_type(self):
         """Sinkronkan ke field standar Odoo (detailed_type atau type)."""

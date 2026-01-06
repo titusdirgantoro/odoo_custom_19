@@ -20,6 +20,8 @@ khusus untuk kebutuhan konstruksi.
         'product',
         'hr',
         'purchase', 
+        'mail',
+        'web',
         'base_address_extended',
         'l10n_id_efaktur_coretax'
     ],
@@ -56,6 +58,17 @@ khusus untuk kebutuhan konstruksi.
         
         'views/construction_menus.xml',
     ],
+    'assets': {
+        'web.assets_backend': [
+            'construction/static/src/scss/font_scale.scss',
+            'construction/static/src/views/form/form_status_indicator.xml',
+            'construction/static/src/js/chatter_restrict_group_system.js',
+            'construction/static/src/xml/chatter_restrict_group_system.xml',
+        ],
+        'web._assets_primary_variables': [
+            'construction/static/src/scss/form_variables_override.scss',
+        ],
+    },
     'installable': True,
     'application': True,
 }

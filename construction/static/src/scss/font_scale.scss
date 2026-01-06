@@ -1,0 +1,16 @@
+
+$o-form-view-sheet-max-width: 100% !default;
+
+html {
+  font-size: 130.5% !important; /* 100% ~ 16px, 112.5% ~ 18px */
+}
+
+.o_web_client {
+  font-size: 1rem;
+}
+.o_form_view {
+  .o_form_sheet_bg,
+  .o_form_sheet {
+    max-width: 100% !important;
+  }
+}

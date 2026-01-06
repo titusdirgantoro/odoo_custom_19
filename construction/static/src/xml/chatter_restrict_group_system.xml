@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-inherit="mail.Chatter" t-inherit-mode="extension">
+        <!-- Root chatter div -->
+        <xpath expr="//div[contains(@class,'o-mail-Chatter')]" position="attributes">
+            <attribute name="t-if">state.thread and state.isSystem</attribute>
+        </xpath>
+    </t>
+
+</templates>

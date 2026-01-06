@@ -31,7 +31,7 @@
             id="menu_construction_project_root"
             name="Project"
             parent="menu_construction_root"
-            sequence="10"
+            sequence="30"
         />
 
         <menuitem
@@ -61,6 +61,7 @@
             name="Configuration"
             parent="menu_construction_root"
             sequence="99"
+            groups="base.group_no_one"
         />
 
         <record id="action_construction_stock_warehouse" model="ir.actions.act_window">
@@ -96,7 +97,7 @@
             id="menu_construction_products_root"
             name="Masters"
             parent="menu_construction_root"
-            sequence="30"
+            sequence="20"
         />
 
         <record id="action_construction_product_bahan" model="ir.actions.act_window">
@@ -220,13 +221,7 @@
             <field name="domain">[('active', '=', True)]</field>
         </record>
 
-        <menuitem
-            id="menu_construction_employee"
-            name="Employee"
-            parent="menu_construction_root"
-            action="action_construction_hr_employee"
-            sequence="40"
-        />
+        
 
         <record id="action_construction_suppliers" model="ir.actions.act_window">
             <field name="name">Pemasok</field>
@@ -246,7 +241,7 @@
             name="Pemasok"
             parent="menu_construction_root"
             action="action_construction_suppliers"
-            sequence="50"
+            sequence="10"
         />
 
         <menuitem id="menu_res_kantor" parent="menu_construction_configuration" action="construction.action_res_kantor" sequence="30"/>

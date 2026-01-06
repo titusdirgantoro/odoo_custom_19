@@ -49,7 +49,7 @@ class ResPartner(models.Model):
     hp_kontak_1 = fields.Char(string='HP Kontak 1')
     kontak_person_2 = fields.Char(string='Kontak Person 2')
     hp_kontak_2 = fields.Char(string='HP Kontak 2')
-
+    jabatan = fields.Char('Jabatan')
     # =========================
     # C, D, F menggunakan field standar res.partner
     # =========================
