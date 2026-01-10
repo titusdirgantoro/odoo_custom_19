@@ -144,31 +144,31 @@
                         </group>
                         <group string="Construction">
                             <field name="construction_product_type" widget="radio" options="{'horizontal': True}"/>
-                            <field name="en_name" />
+                            <field name="en_name" invisible="1"/>
                             <field name="default_code" string="Kode Bahan"/>
-                            <field name="type_master_data"/>
-                            <field name="construction_usage"/>
-                            <field name="rap_coefficient"/>
-                            <field name="rap_uom_id"/>
+                            <field name="type_master_data" readonly="1" force_save="1"/>
+                            <field name="construction_usage" invisible="1"/>
+                            <field name="rap_coefficient" invisible="1"/>
+                            <field name="rap_uom_id" invisible="1"/>
                             <field name="uom_id" widget="many2one_uom" string="Satuan Bahan"
                                 options="{'no_quick_create': True}"
                             />
                         </group>
                         <group string="Lokasi &amp; Harga">
-                            <field name="city_id" />
+                            <field name="city_id" string="Lokasi"/>
                             <field name="construction_price"
                                 widget="monetary"
                                 options="{'currency_field': 'currency_id', 'field_digits': True}"/>
                             <field name="tanggal_harga" />
                         </group>
-                        <group>
+                        <group invisible="1">
                             <label for="usage_category_ids"/>
                             <div>
                                 <field name="usage_category_ids" class="mb-0" widget="many2many_checkboxes"/>
                             </div>
                         </group>
                         <group>
-                            <field name="bahan_group_id"/>
+                            <field name="bahan_group_id" invisible="1"/>
                             <field name="bahan_brand"/>
                         </group>
                         <group>
@@ -177,7 +177,7 @@
                                 <field name="weight" class="oe_inline" style="max-width: 7rem;"/>
                                 <field name="weight_uom_id"/>
                             </div>
-                            <field name="bahan_spec"/>
+                            <field name="bahan_spec" invisible="1"/>
                         </group>
                     </group>
                 </page>
@@ -191,15 +191,15 @@
                         </group>
                         <group string="Construction">
                             <field name="construction_product_type" widget="radio" options="{'horizontal': True}"/>
-                            <field name="en_name" />
+                            <field name="en_name" invisible="1"/>
                             <field name="default_code" string="Kode Upah"/>
-                            <field name="type_master_data"/>
+                            <field name="type_master_data" readonly="1"/>
                             <field name="uom_id" widget="many2one_uom" string="Satuan Upah"
                                 options="{'no_quick_create': True}"
                             />
                         </group>
                         <group string="Lokasi &amp; Harga">
-                            <field name="city_id" />
+                            <field name="city_id" string="Lokasi"/>
                             <field name="construction_price"
                                 widget="monetary"
                                 options="{'currency_field': 'currency_id', 'field_digits': True}"/>
@@ -222,9 +222,9 @@
                         </group>
                         <group string="Construction">
                             <field name="construction_product_type" widget="radio" options="{'horizontal': True}"/>
-                            <field name="en_name" />
+                            <field name="en_name" invisible="1"/>
                             <field name="default_code" string="Kode Overhead"/>
-                            <field name="type_master_data"/>
+                            <field name="type_master_data" readonly="1"/>
                             <field name="uom_id" widget="many2one_uom" string="Satuan Overhead"
                                 options="{'no_quick_create': True}"
                             />
@@ -232,7 +232,7 @@
                             <field name="rental_unit"/>
                         </group>
                         <group string="Lokasi &amp; Harga">
-                            <field name="city_id" />
+                            <field name="city_id" string="Lokasi"/>
                             <field name="construction_price"
                                 widget="monetary"
                                 options="{'currency_field': 'currency_id', 'field_digits': True}"/>
@@ -253,23 +253,23 @@
                         </group>
                         <group string="Construction">
                             <field name="construction_product_type" widget="radio" options="{'horizontal': True}"/>
-                            <field name="en_name" />
+                            <field name="en_name" invisible="1"/>
                             <field name="default_code" string="Kode Alat"/>
-                            <field name="type_master_data"/>
+                            <field name="type_master_data" readonly="1"/>
                             <field name="uom_id" widget="many2one_uom" string="Satuan Alat"
                                 options="{'no_quick_create': True}"
                             />
                         </group>
                         <group string="Lokasi &amp; Harga">
-                            <field name="city_id" />
+                            <field name="city_id" string="Lokasi"/>
                             <field name="construction_price"
                                 widget="monetary"
                                 options="{'currency_field': 'currency_id', 'field_digits': True}"/>
                             <field name="tanggal_harga" />
                         </group>
                         <group string="Integrasi COA">
-                            <field name="kantor_account_id" options="{'no_create': True}"/>
-                            <field name="workshop_account_id" options="{'no_create': True}"/>
+                            <field name="kantor_account_id" options="{'no_create': True}" invisible="1"/>
+                            <field name="workshop_account_id" options="{'no_create': True}" invisible="1"/>
                             <field name="proyek_account_id" options="{'no_create': True}"/>
                         </group>
                         <!-- <group>
@@ -287,9 +287,9 @@
                         </group>
                         <group string="Construction">
                             <field name="construction_product_type" widget="radio" options="{'horizontal': True}"/>
-                            <field name="en_name" />
+                            <field name="en_name" invisible="1"/>
                             <field name="default_code" string="Kode Alat"/>
-                            <field name="type_master_data"/>
+                            <field name="type_master_data" readonly="1"/>
                             <field name="uom_id" widget="many2one_uom" string="Satuan Alat"
                                 options="{'no_quick_create': True}"
                             />
@@ -297,7 +297,7 @@
                             <field name="rental_unit"/>
                         </group>
                         <group string="Lokasi &amp; Harga">
-                            <field name="city_id" />
+                            <field name="city_id" string="Lokasi"/>
                             <field name="construction_price"
                                 widget="monetary"
                                 options="{'currency_field': 'currency_id', 'field_digits': True}"/>
@@ -324,8 +324,7 @@
                                 <field name="construction_price" string="Harga" widget="monetary"
                                     options="{'currency_field': 'currency_id'}"/>
                                 <field name="uom_id" string="Satuan Bahan"/>
-                                <field name="active" string="Status" widget="boolean"/>
-                                <field name="create_date" string="Created at"/>
+                                <field name="bahan_brand" />
                                 <field name="write_date" string="Updated at"/>
                             </list>
                         </field>
@@ -347,8 +346,6 @@
                                 <field name="construction_price" string="Harga" widget="monetary"
                                     options="{'currency_field': 'currency_id'}"/>
                                 <field name="uom_id" string="Satuan Upah"/>
-                                <field name="active" string="Status" widget="boolean"/>
-                                <field name="create_date" string="Created at"/>
                                 <field name="write_date" string="Updated at"/>
                             </list>
                         </field>
@@ -370,8 +367,6 @@
                                 <field name="construction_price" string="Harga" widget="monetary"
                                     options="{'currency_field': 'currency_id'}"/>
                                 <field name="uom_id" string="Satuan Sewa Alat"/>
-                                <field name="active" string="Status" widget="boolean"/>
-                                <field name="create_date" string="Created at"/>
                                 <field name="write_date" string="Updated at"/>
                             </list>
                         </field>
@@ -393,8 +388,6 @@
                                 <field name="construction_price" string="Harga" widget="monetary"
                                     options="{'currency_field': 'currency_id'}"/>
                                 <field name="uom_id" string="Satuan Overhead"/>
-                                <field name="active" string="Status" widget="boolean"/>
-                                <field name="create_date" string="Created at"/>
                                 <field name="write_date" string="Updated at"/>
                             </list>
                         </field>
@@ -416,8 +409,6 @@
                                 <field name="construction_price" string="Harga" widget="monetary"
                                     options="{'currency_field': 'currency_id'}"/>
                                 <field name="uom_id" string="Satuan Jasa"/>
-                                <field name="active" string="Status" widget="boolean"/>
-                                <field name="create_date" string="Created at"/>
                                 <field name="write_date" string="Updated at"/>
                             </list>
                         </field>

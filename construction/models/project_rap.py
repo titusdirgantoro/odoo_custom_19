@@ -44,6 +44,30 @@ class ProjectRap(models.Model):
     user_approve_id = fields.Many2one("res.users", readonly=True, copy=False)
     tanggal_disetujui = fields.Datetime(readonly=True, copy=False)
     comment = fields.Text(copy=False)
+    purchase_order_count = fields.Integer(
+        string="Purchase Orders",
+        compute="_compute_purchase_order_count",
+    )
+
+    def _compute_purchase_order_count(self):
+        PurchaseOrder = self.env["purchase.order"]
+        for rec in self:
+            rec.purchase_order_count = PurchaseOrder.search_count([("rap_id", "=", rec.id)])
+
+    def action_view_purchase_orders(self):
+        self.ensure_one()
+        return {
+            "type": "ir.actions.act_window",
+            "name": _("Purchase Orders"),
+            "res_model": "purchase.order",
+            "view_mode": "list,form",
+            "domain": [("rap_id", "=", self.id)],
+            "context": {
+                "default_rap_id": self.id,
+                "default_project_id": self.project_id.id if self.project_id else False,
+            },
+            "target": "current",
+        }
 
     @api.constrains("project_id", "type")
     def _check_one_rap_per_project(self):
@@ -67,6 +91,25 @@ class ProjectRap(models.Model):
             rec.total_nilai_rap = total
             rec.selisih_kon_rap = (rec.nilai_kontrak or 0.0) - total
 
+    def action_open_create_po_wizard(self):
+        self.ensure_one()
+        if not self.id:
+            raise UserError(_("Silakan simpan dokumen terlebih dahulu."))
+
+        if self.state != "approved":
+            raise UserError(_("PO hanya boleh dibuat saat RAP sudah Approved."))
+
+        return {
+            "type": "ir.actions.act_window",
+            "name": _("Create Purchase Order"),
+            "res_model": "project.rap.create.po.wizard",
+            "view_mode": "form",
+            "target": "new",
+            "context": {
+                "default_rap_id": self.id,
+            },
+        }
+    
     def action_request_approval(self):
         for rec in self:
             if not rec.pekerjaan_ids:

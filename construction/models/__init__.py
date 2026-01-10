@@ -23,3 +23,4 @@ from . import project_rap
 from . import project_pekerjaan
 from . import project_sub_pekerjaan
 from . import project_master_lines
+from . import purchase_order

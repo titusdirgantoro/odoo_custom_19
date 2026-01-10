@@ -53,10 +53,24 @@
 
                         <button name="action_open_copy_wizard" type="object" string="Copy to Another Project"
                                 class="btn-secondary" invisible="id == False"/>
+                        <button name="action_open_create_po_wizard"
+                            type="object"
+                            string="Create Purchase Order"
+                            class="btn-primary"
+                            invisible="id == False"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,request_approval,approved"/>
                     </header>
 
                     <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button type="object"
+                                    name="action_view_purchase_orders"
+                                    class="oe_stat_button"
+                                    icon="fa-shopping-cart"
+                                    invisible="purchase_order_count == 0">
+                                <field name="purchase_order_count" widget="statinfo" string="Purchase Orders"/>
+                            </button>
+                        </div>
                         <group>
                             <group>
                                 <field name="name"/>
