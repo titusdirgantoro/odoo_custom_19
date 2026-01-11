@@ -13,7 +13,7 @@
                     t-on-click.stop="save"
                     data-tooltip="Simpan secara manual"
                     aria-label="Simpan secara manual"
-                    t-ref="save">
+                    t-ref="save" style="margin-right:20px; margin-left:20px; width:4.5rem">
                     Save
                 </button>
 
@@ -23,7 +23,7 @@
                     data-hotkey="j"
                     t-on-click.stop="discard"
                     data-tooltip="Buang semua perubahan"
-                    aria-label="Buang semua perubahan">
+                    aria-label="Buang semua perubahan" style="width:4.5rem">
                     Discard
                 </button>
 

@@ -17,6 +17,7 @@
             </xpath>
             <xpath expr="//sheet//group//field[@name='company_id']" position="attributes">
                 <attribute name="groups"></attribute >
+                <attribute name="readonly">True</attribute >
             </xpath>
             <xpath expr="//sheet//group//field[@name='date_start']" position="attributes">
                 <attribute name="invisible">True</attribute >
@@ -121,6 +122,7 @@
                             <field name="nilai_kontrak"/>
                             <field name="currecy_id"/>
                             <field name="target_rap"/>
+                            <field name="grand_total_kontrak" />
                         </group>
                         <group>
                             <field name="nilai_pekerjaan_rap" readonly="True"/>
@@ -132,15 +134,9 @@
                         <group>
                             <field name="nilai_jasa"/>
                             <field name="ppn_dipotong"/>
+                            <field name="nilai_ppn_11"/>
                             <field name="potongan_pph"/>
-                        </group>
-                    </group>
-                    <group string="Pengguna Jasa">
-                        <group>
-                            <field name="pengguna_jasa"/>
-                        </group>
-                        <group>
-                            <field name="alamat_pengguna_jasa" colspan="4"/>
+                            <field name="nilai_potongan_pph"/>
                         </group>
                     </group>
                 </page>
@@ -154,6 +150,9 @@
         <field name="model">project.project</field>
         <field name="inherit_id" ref="project.view_project"/>
         <field name="arch" type="xml">
+            <xpath expr="//field[@name='user_id']" position="attributes">
+                <attribute name="column_invisible">True</attribute >
+            </xpath>
             <xpath expr="//field[@name='name']" position="after">
                 <field name="user_id" />
                 <field name="nilai_kontrak" />
@@ -165,19 +164,19 @@
                 <field name="tgl_selesai_schedule" />
             </xpath>
             <xpath expr="//field[@name='company_id']" position="attributes">
-                <attribute name="invisible">True</attribute >
+                <attribute name="column_invisible">True</attribute >
             </xpath>
             <xpath expr="//field[@name='partner_id']" position="attributes">
-                <attribute name="invisible">True</attribute >
+                <attribute name="column_invisible">True</attribute >
             </xpath>
             <xpath expr="//button[@name='action_view_tasks']" position="attributes">
-                <attribute name="invisible">True</attribute >
+                <attribute name="column_invisible">True</attribute >
             </xpath>
             <xpath expr="//field[@name='stage_id']" position="attributes">
-                <attribute name="invisible">True</attribute >
+                <attribute name="column_invisible">True</attribute >
             </xpath>
             <xpath expr="//field[@name='last_update_status']" position="attributes">
-                <attribute name="invisible">True</attribute >
+                <attribute name="column_invisible">True</attribute >
             </xpath>
         </field>
     </record>

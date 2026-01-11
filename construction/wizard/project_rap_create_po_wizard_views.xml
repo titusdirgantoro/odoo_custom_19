@@ -14,14 +14,14 @@
           </group>
 
           <group>
-            <field name="partner_id"/>
+            <field name="partner_id" domain="[('supplier_rank', '>', 0)]"/>
             <field name="deliver_to_id"/>
             <field name="expected_arrival"/>
           </group>
 
           <group>
             <field name="use_wizard_lines"/>
-            <field name="merge_same_product" invisible="use_wizard_lines == False"/>
+            <field name="merge_same_product" invisible="1"/>
           </group>
 
           <notebook invisible="use_wizard_lines == False">

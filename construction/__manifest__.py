@@ -22,6 +22,9 @@ khusus untuk kebutuhan konstruksi.
         'purchase', 
         'mail',
         'web',
+        'utm',
+        'spreadsheet_dashboard',
+        'account',
         'base_address_extended',
         'l10n_id_efaktur_coretax'
     ],

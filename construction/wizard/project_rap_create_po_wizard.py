@@ -61,7 +61,7 @@ class ProjectRapCreatePoWizard(models.TransientModel):
 
     @api.onchange('partner_id')
     def _onchange_partner_id(self):
-        self.partner_id = self.deliver_to_id
+        self.deliver_to_id = self.partner_id
 
     def _get_sub_master_lines(self, sub):
         """Gabungkan master lines dari berbagai model (bahan/upah/jasa/alat/overhead)
