@@ -11,6 +11,12 @@
         <field name="code">IBMHO</field>
         <field name="active">True</field>
     </record>
+    <record id="seq_project_fpd" model="ir.sequence">
+        <field name="name">FPD</field>
+        <field name="code">project.fpd</field>
+        <field name="prefix">FPD/%(year)s/</field>
+        <field name="padding">5</field>
+    </record>
 
 
     <!-- ========================== -->

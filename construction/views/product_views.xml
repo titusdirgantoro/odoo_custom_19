@@ -419,4 +419,222 @@
         </field>
     </record>
 
+    <record id="construction_view_product_product_form" model="ir.ui.view">
+        <field name="name">product.product.form.construction</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_normal_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form/header" position="inside">
+                <button name="action_open_product_template"
+                        type="object"
+                        string="Open Product Template"
+                        class="oe_highlight"/>
+            </xpath>
+            <!-- Hide button box seperti di template -->
+            <xpath expr="//div[@name='button_box']" position="attributes">
+                <attribute name="class">d-none</attribute>
+            </xpath>
+
+            <!-- Hide page standar (nama page biasanya sama / mirip, kalau ada yang tidak ketemu, tinggal adjust) -->
+            <xpath expr="//page[@name='general_information']" position="attributes">
+                <attribute name="invisible">True</attribute>
+            </xpath>
+            <xpath expr="//page[@name='sales']" position="attributes">
+                <attribute name="invisible">True</attribute>
+            </xpath>
+            <xpath expr="//page[@name='sales_price']" position="attributes">
+                <attribute name="invisible">True</attribute>
+            </xpath>
+            <xpath expr="//page[@name='purchase']" position="attributes">
+                <attribute name="invisible">True</attribute>
+            </xpath>
+            <xpath expr="//page[@name='inventory']" position="attributes">
+                <attribute name="invisible">True</attribute>
+            </xpath>
+
+            <!-- Tambahkan tab custom sebelum tab general_information (mirip dengan yang kamu lakukan di template) -->
+            <xpath expr="//page[@name='general_information']" position="before">
+
+                <!-- PAGE: BAHAN -->
+                <page string="Bahan" invisible="type_master_data != 'bahan'">
+                    <group>
+                        <group name="internal_notes" string="Deskripsi" colspan="4">
+                            <field colspan="2" name="description" nolabel="1"
+                                   placeholder="This note of description is only for internal purposes."/>
+                        </group>
+
+                        <group string="Construction">
+                            <field name="construction_product_type" widget="radio" options="{'horizontal': True}" readonly="1"/>
+                            <field name="en_name" invisible="1"/>
+                            <field name="default_code" string="Kode Bahan"/>
+                            <field name="type_master_data" readonly="1"/>
+                            <field name="construction_usage" invisible="1"/>
+                            <field name="rap_coefficient" invisible="1"/>
+                            <field name="rap_uom_id" invisible="1"/>
+                            <field name="uom_id" widget="many2one_uom" string="Satuan Bahan"
+                                   options="{'no_quick_create': True}"/>
+                        </group>
+
+                        <group string="Lokasi &amp; Harga">
+                            <field name="city_id" string="Lokasi"/>
+                            <field name="construction_price" widget="monetary"
+                                   options="{'currency_field': 'currency_id', 'field_digits': True}"/>
+                            <field name="tanggal_harga"/>
+                        </group>
+
+                        <group invisible="1">
+                            <label for="usage_category_ids"/>
+                            <div>
+                                <field name="usage_category_ids" class="mb-0" widget="many2many_checkboxes"/>
+                            </div>
+                        </group>
+
+                        <group>
+                            <field name="bahan_group_id" invisible="1"/>
+                            <field name="bahan_brand"/>
+                        </group>
+
+                        <group>
+                            <label for="weight"/>
+                            <div class="o_row" name="weight">
+                                <field name="weight" class="oe_inline" style="max-width: 7rem;"/>
+                                <field name="weight_uom_id"/>
+                            </div>
+                            <field name="bahan_spec" invisible="1"/>
+                        </group>
+                    </group>
+                </page>
+
+                <!-- PAGE: UPAH -->
+                <page string="Upah" invisible="type_master_data != 'upah'">
+                    <group>
+                        <group name="internal_notes" string="Deskripsi" colspan="4">
+                            <field colspan="2" name="description" nolabel="1"
+                                   placeholder="This note of description is only for internal purposes."/>
+                        </group>
+
+                        <group string="Construction">
+                            <field name="construction_product_type" widget="radio" options="{'horizontal': True}" readonly="1"/>
+                            <field name="en_name" invisible="1"/>
+                            <field name="default_code" string="Kode Upah"/>
+                            <field name="type_master_data" readonly="1"/>
+                            <field name="uom_id" widget="many2one_uom" string="Satuan Upah"
+                                   options="{'no_quick_create': True}"/>
+                        </group>
+
+                        <group string="Lokasi &amp; Harga">
+                            <field name="city_id" string="Lokasi"/>
+                            <field name="construction_price" widget="monetary"
+                                   options="{'currency_field': 'currency_id', 'field_digits': True}"/>
+                            <field name="tanggal_harga"/>
+                            <field name="is_status_upah_alat"/>
+                        </group>
+
+                        <group string="Integrasi COA">
+                            <field name="product_account_id" options="{'no_create': True}"/>
+                            <field name="skill_level_id" invisible="1"/>
+                        </group>
+                    </group>
+                </page>
+
+                <!-- PAGE: OVERHEAD -->
+                <page string="Overhead" invisible="type_master_data != 'overhead'">
+                    <group>
+                        <group name="internal_notes" string="Deskripsi" colspan="4">
+                            <field colspan="2" name="description" nolabel="1"
+                                   placeholder="This note of description is only for internal purposes."/>
+                        </group>
+
+                        <group string="Construction">
+                            <field name="construction_product_type" widget="radio" options="{'horizontal': True}" readonly="1"/>
+                            <field name="en_name" invisible="1"/>
+                            <field name="default_code" string="Kode Overhead"/>
+                            <field name="type_master_data" readonly="1"/>
+                            <field name="uom_id" widget="many2one_uom" string="Satuan Overhead"
+                                   options="{'no_quick_create': True}"/>
+                            <field name="equipment_category_id"/>
+                            <field name="rental_unit"/>
+                        </group>
+
+                        <group string="Lokasi &amp; Harga">
+                            <field name="city_id" string="Lokasi"/>
+                            <field name="construction_price" widget="monetary"
+                                   options="{'currency_field': 'currency_id', 'field_digits': True}"/>
+                            <field name="tanggal_harga"/>
+                        </group>
+
+                        <group string="Integrasi COA">
+                            <field name="product_account_id" options="{'no_create': True}"/>
+                        </group>
+                    </group>
+                </page>
+
+                <!-- PAGE: JASA -->
+                <page string="Jasa" invisible="type_master_data != 'jasa'">
+                    <group>
+                        <group name="internal_notes" string="Deskripsi" colspan="4">
+                            <field colspan="2" name="description" nolabel="1"
+                                   placeholder="This note of description is only for internal purposes."/>
+                        </group>
+
+                        <group string="Construction">
+                            <field name="construction_product_type" widget="radio" options="{'horizontal': True}" readonly="1"/>
+                            <field name="en_name" invisible="1"/>
+                            <field name="default_code" string="Kode Alat"/>
+                            <field name="type_master_data" readonly="1"/>
+                            <field name="uom_id" widget="many2one_uom" string="Satuan Alat"
+                                   options="{'no_quick_create': True}"/>
+                        </group>
+
+                        <group string="Lokasi &amp; Harga">
+                            <field name="city_id" string="Lokasi"/>
+                            <field name="construction_price" widget="monetary"
+                                   options="{'currency_field': 'currency_id', 'field_digits': True}"/>
+                            <field name="tanggal_harga"/>
+                        </group>
+
+                        <group string="Integrasi COA">
+                            <field name="kantor_account_id" options="{'no_create': True}" invisible="1"/>
+                            <field name="workshop_account_id" options="{'no_create': True}" invisible="1"/>
+                            <field name="proyek_account_id" options="{'no_create': True}"/>
+                        </group>
+                    </group>
+                </page>
+
+                <!-- PAGE: SEWA ALAT -->
+                <page string="Sewa Alat" invisible="type_master_data != 'sewa_alat'">
+                    <group>
+                        <group name="internal_notes" string="Deskripsi" colspan="4">
+                            <field colspan="2" name="description" nolabel="1"
+                                   placeholder="This note of description is only for internal purposes."/>
+                        </group>
+
+                        <group string="Construction">
+                            <field name="construction_product_type" widget="radio" options="{'horizontal': True}" readonly="1"/>
+                            <field name="en_name" invisible="1"/>
+                            <field name="default_code" string="Kode Alat"/>
+                            <field name="type_master_data" readonly="1"/>
+                            <field name="uom_id" widget="many2one_uom" string="Satuan Alat"
+                                   options="{'no_quick_create': True}"/>
+                            <field name="equipment_category_id"/>
+                            <field name="rental_unit"/>
+                        </group>
+
+                        <group string="Lokasi &amp; Harga">
+                            <field name="city_id" string="Lokasi"/>
+                            <field name="construction_price" widget="monetary"
+                                   options="{'currency_field': 'currency_id', 'field_digits': True}"/>
+                            <field name="tanggal_harga"/>
+                        </group>
+
+                        <group string="Integrasi COA">
+                            <field name="product_account_id" options="{'no_create': True}"/>
+                        </group>
+                    </group>
+                </page>
+
+            </xpath>
+        </field>
+    </record>
+
 </odoo>

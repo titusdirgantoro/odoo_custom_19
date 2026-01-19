@@ -14,6 +14,9 @@ access_construction_equipment_category_user,access_construction_equipment_catego
 access_construction_usage_category_user,access_construction_usage_category_user,model_construction_usage_category,base.group_user,1,1,1,1
 
 access_project_rap_user,project.rap user,model_project_rap,base.group_user,1,1,1,1
+access_project_fpd_user,project.fpd user,model_project_fpd,base.group_user,1,1,1,1
+access_project_fpd_line_user,project.fpd.line user,model_project_fpd_line,base.group_user,1,1,1,1
+
 access_project_pekerjaan_user,project.pekerjaan user,model_project_pekerjaan,base.group_user,1,1,1,1
 access_project_sub_pekerjaan_user,project.sub.pekerjaan user,model_project_sub_pekerjaan,base.group_user,1,1,1,1
 
@@ -32,3 +35,5 @@ access_project_rap_save_as_template,project.rap.save.as.template user,model_proj
 access_project_rap_copy_wizard,project.rap.copy.wizard user,model_project_rap_copy_wizard,base.group_user,1,1,1,1
 access_project_rap_create_po_wizard,project.rap.create.po.wizard user,model_project_rap_create_po_wizard,base.group_user,1,1,1,1
 access_project_rap_create_po_wizard_line,project.rap.create.po.wizard.line user,model_project_rap_create_po_wizard_line,base.group_user,1,1,1,1
+access_project_rap_create_fpd_wizard_user,project.rap.create.fpd.wizard user,model_project_rap_create_fpd_wizard,base.group_user,1,1,1,1
+access_project_rap_create_fpd_wizard_line_user,project.rap.create.fpd.wizard.line user,model_project_rap_create_fpd_wizard_line,base.group_user,1,1,1,1

@@ -5,7 +5,7 @@ from odoo.exceptions import UserError
 
 class ProjectRapCreatePoWizard(models.TransientModel):
     _name = "project.rap.create.po.wizard"
-    _description = "Create Purchase Order from RAP"
+    _description = "Create Purchase Order from RAP (Based on FPD)"
 
     rap_id = fields.Many2one(
         "project.rap",
@@ -14,26 +14,23 @@ class ProjectRapCreatePoWizard(models.TransientModel):
         readonly=True,
     )
 
-    pekerjaan_id = fields.Many2one(
-        "project.pekerjaan",
-        string="Pekerjaan",
+    # Source data sekarang dari FPD
+    fpd_id = fields.Many2one(
+        "project.fpd",
+        string="FPD",
         required=True,
-        domain="[('rap_id', '=', rap_id)]",
-    )
-    sub_pekerjaan_id = fields.Many2one(
-        "project.sub.pekerjaan",
-        string="Sub-Pekerjaan",
-        required=True,
-        domain="[('pekerjaan_id', '=', pekerjaan_id)]",
+        domain="[('rap_id', '=', rap_id), ('state', 'in', ('approve'))]",
+        help="FPD yang akan digunakan sebagai sumber lines untuk PO.",
     )
 
     partner_id = fields.Many2one(
         "res.partner",
         string="Vendor",
         required=True,
+        domain="[('supplier_rank', '>', 0)]"
     )
     deliver_to_id = fields.Many2one(
-        "res.partner",
+        "stock.warehouse",
         string="Deliver To",
     )
     expected_arrival = fields.Datetime(
@@ -43,7 +40,7 @@ class ProjectRapCreatePoWizard(models.TransientModel):
     use_wizard_lines = fields.Boolean(
         string="Use Wizard Lines (Edit Qty/Price Before Create)",
         default=True,
-        help="Jika aktif, sistem akan membuat daftar item berdasarkan master sub-pekerjaan, "
+        help="Jika aktif, sistem akan menyalin item dari FPD ke wizard lines, "
              "dan Anda bisa mengubah qty/harga sebelum membuat PO.",
     )
     merge_same_product = fields.Boolean(
@@ -58,47 +55,69 @@ class ProjectRapCreatePoWizard(models.TransientModel):
         string="Lines",
         copy=False,
     )
+    picking_type_id = fields.Many2one(
+        "stock.picking.type",
+        string="Receipt Operation Type",
+        readonly=True,
+        help="Akan otomatis mengikuti Warehouse (Incoming Type).",
+    )
 
-    @api.onchange('partner_id')
-    def _onchange_partner_id(self):
-        self.deliver_to_id = self.partner_id
+    allowed_product_ids = fields.Many2many(
+        "product.product",
+        string="Allowed Products",
+        compute="_compute_allowed_product_ids",
+        help="Produk yang diizinkan berdasarkan FPD Lines terpilih.",
+    )
 
-    def _get_sub_master_lines(self, sub):
-        """Gabungkan master lines dari berbagai model (bahan/upah/jasa/alat/overhead)
-        menjadi python list supaya aman (tidak union recordset lintas model).
-        """
-        sub.ensure_one()
-        return (
-            list(sub.master_bahan_ids)
-            + list(sub.master_upah_ids)
-            + list(sub.master_sewa_alat_ids)
-            + list(sub.master_overhead_ids)
-            + list(sub.master_jasa_ids)
-        )
+    # =========================================================
+    # Allowed Products: dari FPD Lines
+    # =========================================================
+    @api.depends("fpd_id")
+    def _compute_allowed_product_ids(self):
+        for wiz in self:
+            products = self.env["product.product"]
+            if wiz.fpd_id:
+                tmpls = wiz.fpd_id.line_ids.mapped("product_tmpl_id")
+                products = tmpls.mapped("product_variant_ids")
+            wiz.allowed_product_ids = products
 
-    def _build_wizard_lines_from_sub(self, sub):
-        """Return list of O2M commands untuk field line_ids."""
-        master_lines = self._get_sub_master_lines(sub)
+    # =========================================================
+    # Picking type: dari warehouse
+    # =========================================================
+    @api.onchange("deliver_to_id")
+    def _onchange_deliver_to_id(self):
+        for wiz in self:
+            picking_type = self.env["stock.picking.type"].search(
+                [("code", "=", "incoming"), ("warehouse_id", "in", wiz.deliver_to_id.ids)],
+                limit=1
+            )
+            wiz.picking_type_id = picking_type or False
+
+    # =========================================================
+    # Builder Lines: dari FPD
+    # =========================================================
+    def _build_wizard_lines_from_fpd(self, fpd):
+        """Return list of O2M commands untuk field line_ids dari FPD."""
+        fpd.ensure_one()
 
         # tuples: (product_variant_id, uom_id, qty, price_unit)
         items = []
-        for ml in master_lines:
-            tmpl = ml.product_id  # product.template
+        for fl in fpd.line_ids:
+            tmpl = fl.product_tmpl_id
             if not tmpl:
                 continue
 
-            # purchase.order.line pakai product.product
-            variant = tmpl.product_variant_id
+            variant = tmpl.product_variant_id  # asumsi 1 template = 1 variant
             if not variant:
                 continue
 
-            qty = ml.volume or 0.0
-            price = ml.harga_satuan or 0.0
-            uom = ml.uom_id
+            qty = fl.qty or 0.0
+            price = fl.price_unit or 0.0
+            uom = fl.uom_id or tmpl.uom_id
 
             items.append((variant.id, uom.id, qty, price))
 
-        commands = [(5, 0, 0)]  # clear existing
+        commands = [(5, 0, 0)]
         if not items:
             return commands
 
@@ -109,7 +128,7 @@ class ProjectRapCreatePoWizard(models.TransientModel):
                 if key not in merged:
                     merged[key] = {"qty": 0.0, "price": price}
                 merged[key]["qty"] += qty
-                merged[key]["price"] = price  # keep latest
+                merged[key]["price"] = price
             for (product_id, uom_id), vals in merged.items():
                 commands.append((0, 0, {
                     "product_id": product_id,
@@ -128,75 +147,74 @@ class ProjectRapCreatePoWizard(models.TransientModel):
 
         return commands
 
-    # =========================
-    # Onchange
-    # =========================
-    @api.onchange("pekerjaan_id")
-    def _onchange_pekerjaan_id(self):
-        """Saat pekerjaan berubah: reset sub & lines."""
-        self.sub_pekerjaan_id = False
-        self.line_ids = [(5, 0, 0)]
-
-    @api.onchange("sub_pekerjaan_id", "use_wizard_lines", "merge_same_product")
-    def _onchange_sub_pekerjaan_id(self):
-        """Auto-generate wizard lines ketika sub-pekerjaan dipilih (opsional)."""
+    # =========================================================
+    # Onchange: FPD -> generate lines
+    # =========================================================
+    @api.onchange("fpd_id", "use_wizard_lines", "merge_same_product")
+    def _onchange_fpd_id(self):
         if not self.use_wizard_lines:
             self.line_ids = [(5, 0, 0)]
             return
 
-        if not self.sub_pekerjaan_id:
+        if not self.fpd_id:
             self.line_ids = [(5, 0, 0)]
             return
 
-        self.line_ids = self._build_wizard_lines_from_sub(self.sub_pekerjaan_id)
+        self.line_ids = self._build_wizard_lines_from_fpd(self.fpd_id)
 
-    # =========================
-    # Action
-    # =========================
+    # =========================================================
+    # Action Create PO
+    # =========================================================
     def action_confirm_create_po(self):
-        """Klik OK -> buat purchase.order + purchase.order.line."""
         self.ensure_one()
 
         # Validasi integritas
+        if not self.picking_type_id:
+            raise UserError(_("Warehouse belum memiliki Incoming Operation Type (Receipt)."))
+
         if not self.rap_id:
             raise UserError(_("RAP tidak ditemukan."))
 
-        if not self.pekerjaan_id or self.pekerjaan_id.rap_id != self.rap_id:
-            raise UserError(_("Pekerjaan tidak valid untuk RAP ini."))
-
-        if not self.sub_pekerjaan_id or self.sub_pekerjaan_id.pekerjaan_id != self.pekerjaan_id:
-            raise UserError(_("Sub-Pekerjaan tidak valid untuk Pekerjaan ini."))
+        if not self.fpd_id or self.fpd_id.rap_id != self.rap_id:
+            raise UserError(_("FPD tidak valid untuk RAP ini."))
 
         if not self.partner_id:
             raise UserError(_("Vendor wajib diisi."))
 
+        if not self.fpd_id.line_ids:
+            raise UserError(_("FPD Lines kosong."))
+
+        picking_type = self.picking_type_id
+
+        # Header PO: ambil pekerjaan/sub dari FPD
         po_vals = {
             "partner_id": self.partner_id.id,
             "rap_id": self.rap_id.id,
-            "pekerjaan_id": self.pekerjaan_id.id,
-            "sub_pekerjaan_id": self.sub_pekerjaan_id.id,
-            "deliver_to_id": self.deliver_to_id.id if self.deliver_to_id else False,
+            "fpd_id": self.fpd_id.id if "fpd_id" in self.env["purchase.order"]._fields else False,
+            "pekerjaan_id": self.fpd_id.pekerjaan_id.id if "pekerjaan_id" in self.env["purchase.order"]._fields else False,
+            "sub_pekerjaan_id": self.fpd_id.sub_pekerjaan_id.id if "sub_pekerjaan_id" in self.env["purchase.order"]._fields else False,
+            "picking_type_id": picking_type.id,
             "expected_arrival": self.expected_arrival,
         }
 
+        # bersihkan key False agar tidak error create bila field tidak ada
+        po_vals = {k: v for k, v in po_vals.items() if v is not False}
+
         po = self.env["purchase.order"].create(po_vals)
 
-        line_vals_list = []
         planned_date = self.expected_arrival or fields.Datetime.now()
+        line_vals_list = []
 
         if self.use_wizard_lines:
             if not self.line_ids:
                 raise UserError(_(
-                    "Wizard Lines kosong. Pilih Sub-Pekerjaan untuk generate lines "
+                    "Wizard Lines kosong. Pilih FPD untuk generate lines "
                     "atau matikan opsi Wizard Lines."
                 ))
 
             for wl in self.line_ids:
-                if not wl.product_id:
+                if not wl.product_id or wl.product_qty <= 0:
                     continue
-                if wl.product_qty <= 0:
-                    continue
-
                 line_vals_list.append({
                     "order_id": po.id,
                     "product_id": wl.product_id.id,
@@ -207,30 +225,24 @@ class ProjectRapCreatePoWizard(models.TransientModel):
                     "name": wl.name or wl.product_id.display_name,
                 })
         else:
-            # langsung ambil dari master sub pekerjaan
-            sub = self.sub_pekerjaan_id
-            master_lines = self._get_sub_master_lines(sub)
-
-            for ml in master_lines:
-                tmpl = ml.product_id
+            # langsung ambil dari FPD lines
+            for fl in self.fpd_id.line_ids:
+                tmpl = fl.product_tmpl_id
                 if not tmpl:
                     continue
-
                 variant = tmpl.product_variant_id
                 if not variant:
                     continue
-
-                qty = ml.volume or 0.0
+                qty = fl.qty or 0.0
                 if qty <= 0:
                     continue
-
-                uom = ml.uom_id
+                uom = fl.uom_id or tmpl.uom_id
                 line_vals_list.append({
                     "order_id": po.id,
                     "product_id": variant.id,
                     "product_qty": qty,
                     "product_uom_id": uom.id,
-                    "price_unit": ml.harga_satuan or 0.0,
+                    "price_unit": fl.price_unit or 0.0,
                     "date_planned": planned_date,
                     "name": variant.display_name,
                 })
@@ -238,7 +250,7 @@ class ProjectRapCreatePoWizard(models.TransientModel):
         if line_vals_list:
             self.env["purchase.order.line"].create(line_vals_list)
         else:
-            raise UserError(_("Tidak ada line yang dibuat. Cek qty/produk pada master atau wizard lines."))
+            raise UserError(_("Tidak ada line yang dibuat. Cek qty/produk pada FPD."))
 
         return {
             "type": "ir.actions.act_window",
@@ -261,25 +273,35 @@ class ProjectRapCreatePoWizardLine(models.TransientModel):
         ondelete="cascade",
     )
 
+    allowed_product_ids = fields.Many2many(
+        "product.product",
+        related="wizard_id.allowed_product_ids",
+        readonly=True,
+    )
+
     product_id = fields.Many2one(
         "product.product",
         string="Product",
         required=True,
+        domain="[('id', 'in', allowed_product_ids)]",
     )
+
     name = fields.Char(string="Description")
 
-    product_qty = fields.Float(
-        string="Quantity",
-        default=1.0,
-    )
+    product_qty = fields.Float(string="Quantity", default=1.0)
+
     product_uom = fields.Many2one(
         "uom.uom",
         string="Unit of Measure",
         required=True,
     )
-    price_unit = fields.Float(
-        string="Unit Price",
-        default=0.0,
+
+    price_unit = fields.Float(string="Unit Price", default=0.0)
+
+    type_master_data = fields.Selection(
+        related="product_id.type_master_data",
+        string="Type Master Data",
+        readonly=True,
     )
 
     @api.onchange("product_id")

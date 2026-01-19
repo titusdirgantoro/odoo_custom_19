@@ -211,8 +211,108 @@ class ProductTemplate(models.Model):
 class ProductProduct(models.Model):
     _inherit = 'product.product'
 
+    # ===== Mirror dari template (store=True semuanya) =====
+    en_name = fields.Char(related='product_tmpl_id.en_name', store=False, readonly=True)
     type_master_data = fields.Selection(
+        related='product_tmpl_id.type_master_data',
+        store=False,
+        readonly=True,
         string='Type Master Data',
         help='Menandai jenis master data produk untuk kebutuhan Construction.',
-        related='product_tmpl_id.type_master_data'
     )
+
+    parent_product_id = fields.Many2one(
+        'product.template',
+        related='product_tmpl_id.parent_product_id',
+        store=False,
+        readonly=True,
+        string='Parent Product',
+    )
+    product_level = fields.Integer(
+        related='product_tmpl_id.product_level',
+        store=False,
+        readonly=True,
+        string='Product Level',
+    )
+
+    tanggal_harga = fields.Date(related='product_tmpl_id.tanggal_harga', store=False, readonly=True)
+    city_id = fields.Many2one('res.city', related='product_tmpl_id.city_id', store=False, readonly=True)
+
+    construction_usage = fields.Selection(related='product_tmpl_id.construction_usage', store=False, readonly=True)
+    rap_coefficient = fields.Float(related='product_tmpl_id.rap_coefficient', store=False, readonly=True)
+    rap_uom_id = fields.Many2one('uom.uom', related='product_tmpl_id.rap_uom_id', store=False, readonly=True)
+
+    construction_price = fields.Monetary(
+        related='product_tmpl_id.construction_price',
+        store=False,
+        readonly=True,
+        currency_field='currency_id',
+        string='Harga',
+    )
+    construction_product_type = fields.Selection(
+        related='product_tmpl_id.construction_product_type',
+        store=False,
+        readonly=True,
+        string='Tipe Produk',
+    )
+
+    # ===== Bahan =====
+    bahan_group_id = fields.Many2one('construction.material.group', related='product_tmpl_id.bahan_group_id', store=False, readonly=True)
+    bahan_spec = fields.Char(related='product_tmpl_id.bahan_spec', store=False, readonly=True)
+    bahan_brand = fields.Char(related='product_tmpl_id.bahan_brand', store=False, readonly=True)
+    weight_uom_id = fields.Many2one('uom.uom', related='product_tmpl_id.weight_uom_id', store=False, readonly=True)
+    usage_category_ids = fields.Many2many(
+        'construction.usage.category',
+        'product_product_usage_category_rel',   # nama table relasi (HARUS ada)
+        'product_id',                           # kolom FK ke product_product
+        'category_id',                          # kolom FK ke usage category
+        string='Kategori Penggunaan',
+        compute='_compute_usage_category_ids',
+        inverse='_inverse_usage_category_ids',
+        store=False,
+    )
+
+
+    product_account_id = fields.Many2one('account.account', related='product_tmpl_id.product_account_id', store=False, readonly=True)
+    kantor_account_id = fields.Many2one('account.account', related='product_tmpl_id.kantor_account_id', store=False, readonly=True)
+    workshop_account_id = fields.Many2one('account.account', related='product_tmpl_id.workshop_account_id', store=False, readonly=True)
+    proyek_account_id = fields.Many2one('account.account', related='product_tmpl_id.proyek_account_id', store=False, readonly=True)
+
+    # ===== Upah =====
+    is_status_upah_alat = fields.Boolean(related='product_tmpl_id.is_status_upah_alat', store=False, readonly=True)
+    skill_level_id = fields.Many2one('construction.skill.level', related='product_tmpl_id.skill_level_id', store=False, readonly=True)
+
+    # ===== Overhead =====
+    overhead_type_id = fields.Many2one('construction.overhead.type', related='product_tmpl_id.overhead_type_id', store=False, readonly=True)
+    overhead_description = fields.Char(related='product_tmpl_id.overhead_description', store=False, readonly=True)
+
+    # ===== Jasa =====
+    service_category_id = fields.Many2one('construction.service.category', related='product_tmpl_id.service_category_id', store=False, readonly=True)
+    service_scope = fields.Text(related='product_tmpl_id.service_scope', store=False, readonly=True)
+
+    # ===== Sewa Alat =====
+    equipment_category_id = fields.Many2one('construction.equipment.category', related='product_tmpl_id.equipment_category_id', store=False, readonly=True)
+    rental_unit = fields.Selection(related='product_tmpl_id.rental_unit', store=False, readonly=True)
+    min_rental_duration = fields.Float(related='product_tmpl_id.min_rental_duration', store=False, readonly=True)
+
+    @api.depends('product_tmpl_id.usage_category_ids')
+    def _compute_usage_category_ids(self):
+        for rec in self:
+            rec.usage_category_ids = rec.product_tmpl_id.usage_category_ids
+
+    def _inverse_usage_category_ids(self):
+        # karena kamu desain 1 template = 1 variant, inverse ini aman
+        for rec in self:
+            rec.product_tmpl_id.usage_category_ids = rec.usage_category_ids
+
+    def action_open_product_template(self):
+        self.ensure_one()
+        return {
+            "type": "ir.actions.act_window",
+            "name": _("Product Template"),
+            "res_model": "product.template",
+            "view_mode": "form",
+            "res_id": self.product_tmpl_id.id,
+            "target": "current",
+            "context": dict(self.env.context, create=False),
+        }

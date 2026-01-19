@@ -18,7 +18,7 @@ from . import project_project
 from . import project_master_line_mixin
 
 from . import rap_template
-
+from . import project_fpd
 from . import project_rap
 from . import project_pekerjaan
 from . import project_sub_pekerjaan

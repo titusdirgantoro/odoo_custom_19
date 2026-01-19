@@ -1,6 +1,7 @@
 from odoo import models, fields, api, _
 
-
+import logging
+_logger = logging.getLogger(__name__)
 class ProjectProject(models.Model):
     _inherit = 'project.project'
     
@@ -44,6 +45,7 @@ class ProjectProject(models.Model):
     
 
     # Data Keuangan
+    rap_id = fields.Many2one('project.rap', string='RAP')
     nilai_ppn_11 = fields.Float(
         string="Nilai PPN 11%",
         compute="_compute_construction_finance",
@@ -99,6 +101,7 @@ class ProjectProject(models.Model):
         "nilai_kontrak",
         "ppn_dipotong",
         "potongan_pph",
+        "rap_id",
     )
     def _compute_construction_finance(self):
         """
@@ -139,11 +142,12 @@ class ProjectProject(models.Model):
                 dpp = nilai_kontrak
 
             # --- Nilai Pek. RAP (sum pekerjaan pada RAP type 'rap' untuk proyek ini) ---
-            rap = ProjectRap.search(
-                [("project_id", "=", project.id), ("type", "=", "rap")],
+            rap = project.rap_id or ProjectRap.search(
+                [("project_id", "in", project.ids), ("type", "=", "rap")],
                 order="id desc",
                 limit=1,
             )
+            _logger.info("=== rap %s" % (str(rap)))
             nilai_pekerjaan_rap = 0.0
             if rap:
                 # total_harga di project.pekerjaan sudah compute
@@ -152,7 +156,7 @@ class ProjectProject(models.Model):
             # --- Nilai Pek. Kontrak (sum pengeluaran dari PO) ---
             # Catatan: project_id pada PO harus sudah ada & store (related rap_id.project_id) dari implementasi sebelumnya
             po_domain = [
-                ("project_id", "=", project.id),
+                ("project_id", "in", project.ids),
                 ("state", "in", ("purchase", "done")),
             ]
             # pakai amount_untaxed supaya sejajar dengan DPP; kalau mau amount_total tinggal ganti

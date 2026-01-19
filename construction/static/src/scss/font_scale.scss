@@ -14,3 +14,10 @@ html {
     max-width: 100% !important;
   }
 }
+
+th[data-name="total_harga"]{
+  min-width: 220px !important;
+  width: 220px !important;
+  white-space: nowrap !important;
+}
+

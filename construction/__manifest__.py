@@ -50,6 +50,7 @@ khusus untuk kebutuhan konstruksi.
         'views/product_views.xml',
         'views/rap_template_views.xml',
         'views/project_rap_views.xml',
+        'views/project_fpd_views.xml',
         'views/project_pekerjaan_views.xml',
         'views/project_sub_pekerjaan_views.xml',
         'views/purchase_order_views.xml',
@@ -58,6 +59,7 @@ khusus untuk kebutuhan konstruksi.
         'wizard/project_rap_copy_wizard_views.xml',
         'wizard/project_rap_import_template_wizard_views.xml',
         'wizard/project_rap_save_as_template_wizard_views.xml',
+        'wizard/project_rap_create_fpd_wizard_views.xml',
         
         'views/construction_menus.xml',
     ],

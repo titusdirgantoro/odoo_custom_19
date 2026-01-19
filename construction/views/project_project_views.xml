@@ -132,7 +132,7 @@
                     </group>
                     <group string="Jasa &amp; Pajak">
                         <group>
-                            <field name="nilai_jasa"/>
+                            <!-- <field name="nilai_jasa"/> -->
                             <field name="ppn_dipotong"/>
                             <field name="nilai_ppn_11"/>
                             <field name="potongan_pph"/>

@@ -1,0 +1,40 @@
+<odoo>
+    <record id="view_project_rap_create_fpd_wizard_form" model="ir.ui.view">
+        <field name="name">project.rap.create.fpd.wizard.form</field>
+        <field name="model">project.rap.create.fpd.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Create FPD">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="rap_id" readonly="1"/>
+                            <field name="project_id" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="pekerjaan_id" required="1"/>
+                            <field name="sub_pekerjaan_id" required="1"/>
+                            <field name="merge_same_product" invisible="1"/>
+                        </group>
+                    </group>
+
+                    <group>
+                        <field name="line_ids" nolabel="1">
+                            <list editable="bottom">
+                                <field name="product_tmpl_id"/>
+                                <field name="qty"/>
+                                <field name="uom_id"/>
+                                <field name="price_unit"/>
+                                <field name="total_price" readonly="1"/>
+                            </list>
+                        </field>
+                    </group>
+
+                    <footer>
+                        <button name="action_create_fpd" type="object" string="Create FPD" class="oe_highlight"/>
+                        <button string="Cancel" special="cancel" class="btn-secondary"/>
+                    </footer>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>

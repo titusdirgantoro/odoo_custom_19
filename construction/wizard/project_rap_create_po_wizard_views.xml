@@ -8,19 +8,21 @@
       <field name="arch" type="xml">
         <form string="Create Purchase Order">
           <group>
-            <field name="rap_id" readonly="1"/>
-            <field name="pekerjaan_id"/>
-            <field name="sub_pekerjaan_id"/>
+            <group>
+              <field name="rap_id" readonly="1"/>
+              <field name="fpd_id" required="1"/>
+            </group>
+
+            <group>
+              <field name="partner_id" domain="[('supplier_rank', '>', 0)]"/>
+              <field name="deliver_to_id"/>
+              <field name="expected_arrival"/>
+            </group>
           </group>
+          
 
           <group>
-            <field name="partner_id" domain="[('supplier_rank', '>', 0)]"/>
-            <field name="deliver_to_id"/>
-            <field name="expected_arrival"/>
-          </group>
-
-          <group>
-            <field name="use_wizard_lines"/>
+            <field name="use_wizard_lines" invisible="1"/>
             <field name="merge_same_product" invisible="1"/>
           </group>
 
@@ -28,7 +30,9 @@
             <page string="Lines">
               <field name="line_ids">
                 <list editable="bottom">
+                  <field name="allowed_product_ids" column_invisible="1"/>
                   <field name="product_id"/>
+                  <field name="type_master_data"/>
                   <field name="name"/>
                   <field name="product_qty"/>
                   <field name="product_uom"/>

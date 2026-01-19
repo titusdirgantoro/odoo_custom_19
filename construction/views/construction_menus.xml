@@ -5,7 +5,7 @@
 
         <menuitem
             id="menu_construction_root"
-            name="Construction"
+            name="Aktifitas"
             web_icon="construction,static/description/icon.png"
             sequence="30"
             />
@@ -54,7 +54,11 @@
                   action="construction.action_project_pfc"
                   sequence="20"/>
 
-        
+        <menuitem id="menu_construction_fpd"
+                name="FPD"
+                parent="menu_construction_project_root"
+                action="construction.action_project_fpd"
+                sequence="30"/>
 
         <menuitem
             id="menu_construction_configuration"

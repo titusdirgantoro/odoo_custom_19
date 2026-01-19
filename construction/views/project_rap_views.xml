@@ -50,9 +50,15 @@
                                 class="btn-secondary" invisible="state == 'approved' or id == False"/>
                         <button name="action_open_save_as_template_wizard" type="object" string="Save as Template"
                                 class="btn-secondary" invisible="id == False"/>
-
+                        <button name="action_create_pfc" type="object" string="Create PFC"
+                                class="btn-primary"
+                                invisible="type != 'rap' or state != 'approved' or id == False"/>
                         <button name="action_open_copy_wizard" type="object" string="Copy to Another Project"
                                 class="btn-secondary" invisible="id == False"/>
+                        <button name="action_create_fpd"
+                                type="object"
+                                string="Create FPD"
+                                class="oe_highlight"/>
                         <button name="action_open_create_po_wizard"
                             type="object"
                             string="Create Purchase Order"
@@ -70,12 +76,27 @@
                                     invisible="purchase_order_count == 0">
                                 <field name="purchase_order_count" widget="statinfo" string="Purchase Orders"/>
                             </button>
+                            <button type="object"
+                                    name="action_view_pfcs"
+                                    class="oe_stat_button"
+                                    icon="fa-files-o"
+                                    invisible="type != 'rap' or pfc_count == 0">
+                                <field name="pfc_count" widget="statinfo" string="PFC"/>
+                            </button>
+                            <button name="action_open_fpd"
+                                    type="object"
+                                    class="oe_stat_button"
+                                    icon="fa-file-text-o"
+                                    invisible="fpd_count == 0">
+                                <field name="fpd_count" widget="statinfo" string="FPD"/>
+                            </button>
                         </div>
                         <group>
                             <group>
                                 <field name="name"/>
                                 <field name="type"/>
                                 <field name="project_id"/>
+                                <field name="rap_origin_id" invisible="type != 'pfc'" readonly="1"/>
                             </group>
                             <group>
                                 <field name="nilai_kontrak" readonly="1"/>
@@ -89,9 +110,9 @@
                                 <field name="pekerjaan_ids" context="{'default_rap_id': id}" readonly="state == 'approved'">
                                     <list create="1" edit="1" delete="1">
                                         <field name="rap_id" column_invisible="1"/>
-                                        <field name="code"/>
-                                        <field name="name"/>
-                                        <field name="total_harga" readonly="1"/>
+                                        <field name="code" style="30px !important"/>
+                                        <field name="name" style="150px !important"/>
+                                        <field name="total_harga"  readonly="1"/>
                                     </list>
                                     <form>
                                         <sheet>

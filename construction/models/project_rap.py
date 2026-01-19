@@ -48,7 +48,120 @@ class ProjectRap(models.Model):
         string="Purchase Orders",
         compute="_compute_purchase_order_count",
     )
+    rap_origin_id = fields.Many2one(
+        "project.rap",
+        string="Source RAP",
+        index=True,
+        copy=False,
+        readonly=True,
+        domain=[("type", "=", "rap")],
+        help="RAP source document that generated this PFC.",
+    )
+    pfc_ids = fields.One2many(
+        "project.rap",
+        "rap_origin_id",
+        string="PFC",
+        copy=False,
+        readonly=True,
+    )
+    pfc_count = fields.Integer(string="PFC", compute="_compute_pfc_count")
+    fpd_ids = fields.One2many("project.fpd", "rap_id", string="FPD Documents")
+    fpd_count = fields.Integer(string="FPD", compute="_compute_fpd_count")
 
+    def _compute_fpd_count(self):
+        for rec in self:
+            rec.fpd_count = len(rec.fpd_ids)
+
+    def action_open_fpd(self):
+        self.ensure_one()
+        return {
+            "type": "ir.actions.act_window",
+            "name": _("FPD"),
+            "res_model": "project.fpd",
+            "view_mode": "list,form",
+            "domain": [("rap_id", "=", self.id)],
+            "context": {"default_rap_id": self.id, "default_project_id": self.project_id.id},
+            "target": "current",
+        }
+
+    def action_create_fpd(self):
+        self.ensure_one()
+        if not self.project_id:
+            raise UserError(_("RAP belum memiliki Project."))
+
+        return {
+            "type": "ir.actions.act_window",
+            "name": _("Create FPD"),
+            "res_model": "project.rap.create.fpd.wizard",
+            "view_mode": "form",
+            "target": "new",
+            "context": {
+                "default_rap_id": self.id,
+                "default_project_id": self.project_id.id,
+            },
+        }
+
+    def _compute_pfc_count(self):
+        for rec in self:
+            rec.pfc_count = len(rec.pfc_ids) if rec.type == "rap" else 0
+
+    def action_view_pfcs(self):
+        """Smart button on RAP to open all PFC linked to this RAP."""
+        self.ensure_one()
+        return {
+            "type": "ir.actions.act_window",
+            "name": _("PFC"),
+            "res_model": "project.rap",
+            "view_mode": "list,form",
+            "domain": [("rap_origin_id", "=", self.id), ("type", "=", "pfc")],
+            "context": {
+                "default_type": "pfc",
+                "default_project_id": self.project_id.id if self.project_id else False,
+                "default_rap_origin_id": self.id,
+            },
+            "target": "current",
+        }
+
+    def action_create_pfc(self):
+        """Create PFC from RAP (copy structure & lines), link it back to RAP."""
+        self.ensure_one()
+        if self.type != "rap":
+            raise UserError(_("Create PFC hanya bisa dilakukan dari dokumen RAP."))
+        if not self.id:
+            raise UserError(_("Silakan simpan dokumen terlebih dahulu."))
+        if self.state != "approved":
+            raise UserError(_("PFC hanya boleh dibuat saat RAP sudah Approved."))
+
+        # Generate readable unique name
+        base = f"PFC - {self.name}"
+        existing = self.search_count([
+            ("type", "=", "pfc"),
+            ("rap_origin_id", "=", self.id),
+        ])
+        new_name = base if existing == 0 else f"{base} ({existing + 1})"
+
+        # NOTE: copy() akan ikut menyalin pekerjaan/sub pekerjaan/master lines (copy=True)
+        pfc = self.copy({
+            "name": new_name,
+            "type": "pfc",
+            "project_id": self.project_id.id,  # penting karena project_id copy=False
+            "rap_origin_id": self.id,
+            "state": "draft",
+            "user_request_id": False,
+            "user_approve_id": False,
+            "tanggal_disetujui": False,
+            "comment": False,
+        })
+
+        return {
+            "type": "ir.actions.act_window",
+            "name": _("PFC"),
+            "res_model": "project.rap",
+            "view_mode": "form",
+            "res_id": pfc.id,
+            "target": "current",
+        }
+    
     def _compute_purchase_order_count(self):
         PurchaseOrder = self.env["purchase.order"]
         for rec in self:
@@ -192,6 +305,12 @@ class ProjectRap(models.Model):
         for rec in self:
             if rec.state == "approved":
                 raise UserError(_("Dokumen RAP/PFC sudah Approved, tidak bisa diubah."))
+
+    @api.model
+    def create(self, vals):
+        res = super().create(vals)
+        res.project_id.rap_id = res
+        return res
 
     def write(self, vals):
         # tetap izinkan perubahan metadata approval/state via action
