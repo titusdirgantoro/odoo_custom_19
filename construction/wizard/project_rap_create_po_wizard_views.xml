@@ -16,6 +16,7 @@
             <group>
               <field name="partner_id" domain="[('supplier_rank', '>', 0)]"/>
               <field name="deliver_to_id"/>
+              <field name="picking_type_id" invisible="1" force_save="1"/>
               <field name="expected_arrival"/>
             </group>
           </group>

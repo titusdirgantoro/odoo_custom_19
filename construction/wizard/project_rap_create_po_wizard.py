@@ -2,6 +2,8 @@
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError
 
+import logging
+_logger = logging.getLogger(__name__)
 
 class ProjectRapCreatePoWizard(models.TransientModel):
     _name = "project.rap.create.po.wizard"
@@ -58,6 +60,7 @@ class ProjectRapCreatePoWizard(models.TransientModel):
     picking_type_id = fields.Many2one(
         "stock.picking.type",
         string="Receipt Operation Type",
+        compute="_compute_picking_type_id",
         readonly=True,
         help="Akan otomatis mengikuti Warehouse (Incoming Type).",
     )
@@ -84,8 +87,8 @@ class ProjectRapCreatePoWizard(models.TransientModel):
     # =========================================================
     # Picking type: dari warehouse
     # =========================================================
-    @api.onchange("deliver_to_id")
-    def _onchange_deliver_to_id(self):
+    @api.depends("deliver_to_id")
+    def _compute_picking_type_id(self):
         for wiz in self:
             picking_type = self.env["stock.picking.type"].search(
                 [("code", "=", "incoming"), ("warehouse_id", "in", wiz.deliver_to_id.ids)],
@@ -167,7 +170,7 @@ class ProjectRapCreatePoWizard(models.TransientModel):
     # =========================================================
     def action_confirm_create_po(self):
         self.ensure_one()
-
+        _logger.info("==== self.picking_type_id %s" % (str(self.picking_type_id)))
         # Validasi integritas
         if not self.picking_type_id:
             raise UserError(_("Warehouse belum memiliki Incoming Operation Type (Receipt)."))
