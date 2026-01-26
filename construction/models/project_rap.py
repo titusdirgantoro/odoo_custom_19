@@ -25,6 +25,17 @@ class ProjectRap(models.Model):
 
     total_nilai_rap = fields.Float(compute="_compute_total", store=True)
     selisih_kon_rap = fields.Float(compute="_compute_total", store=True)
+    total_nilai_pfc = fields.Float(
+        string="Total Nilai PFC",
+        compute="_compute_total_pfc",
+        store=True,
+    )
+
+    selisih_kon_pfc = fields.Float(
+        string="Selisih Kontrak PFC",
+        compute="_compute_total_pfc",
+        store=True,
+    )
 
     total_realisasi = fields.Float(default=0.0)
     notes = fields.Text()
@@ -67,6 +78,32 @@ class ProjectRap(models.Model):
     pfc_count = fields.Integer(string="PFC", compute="_compute_pfc_count")
     fpd_ids = fields.One2many("project.fpd", "rap_id", string="FPD Documents")
     fpd_count = fields.Integer(string="FPD", compute="_compute_fpd_count")
+    total_nilai_pfc_on_rap = fields.Float(
+        string="Total Nilai PFC on RAP",
+        compute="_compute_total_nilai_pfc",
+        store=True,
+    )
+
+    @api.depends("pekerjaan_ids.total_harga", "nilai_kontrak", "type", "name")
+    def _compute_total_pfc(self):
+        for rec in self:
+            if rec.type != "pfc":
+                rec.total_nilai_pfc = 0.0
+                rec.selisih_kon_pfc = 0.0
+                continue
+
+            total = sum(rec.pekerjaan_ids.mapped("total_harga"))
+            rec.total_nilai_pfc = total
+            rec.selisih_kon_pfc = (rec.nilai_kontrak or 0.0) - total
+
+    @api.depends("pfc_ids.total_nilai_rap", "type")
+    def _compute_total_nilai_pfc(self):
+        for rec in self:
+            if rec.type != "rap":
+                rec.total_nilai_pfc_on_rap = 0.0
+                continue
+            rec.total_nilai_pfc_on_rap = sum(rec.pfc_ids.mapped("total_nilai_rap"))
+
 
     def _compute_fpd_count(self):
         for rec in self:

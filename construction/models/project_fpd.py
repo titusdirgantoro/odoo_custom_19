@@ -48,6 +48,30 @@ class ProjectFpd(models.Model):
         string="Status",
         default="draft",
     )
+    allowed_product_tmpl_ids = fields.Many2many(
+        "product.template",
+        string="Allowed Product Templates",
+        compute="_compute_allowed_product_tmpl_ids",
+        compute_sudo=True,
+        help="Template produk yang diizinkan berdasarkan Sub-Pekerjaan.",
+    )
+
+    @api.depends("sub_pekerjaan_id")
+    def _compute_allowed_product_tmpl_ids(self):
+        for rec in self:
+            sub = rec.sub_pekerjaan_id
+            if sub:
+                all_lines = (
+                    list(sub.master_bahan_ids)
+                    + list(sub.master_upah_ids)
+                    + list(sub.master_sewa_alat_ids)
+                    + list(sub.master_overhead_ids)
+                    + list(sub.master_jasa_ids)
+                )
+                tmpl_ids = [ml.product_id.id for ml in all_lines if ml.product_id]  # product.template
+                rec.allowed_product_tmpl_ids = [(6, 0, list(set(tmpl_ids)))]
+            else:
+                rec.allowed_product_tmpl_ids = [(5, 0, 0)]
 
     @api.depends("line_ids.total_price")
     def _compute_amount_total(self):
@@ -103,6 +127,17 @@ class ProjectFpdLine(models.Model):
     uom_id = fields.Many2one("uom.uom", string="UoM", required=True)
     price_unit = fields.Float(string="Price Unit", default=0.0)
     total_price = fields.Float(string="Total Price", compute="_compute_total_price", store=True)
+    allowed_product_tmpl_ids = fields.Many2many(
+        "product.template",
+        related="fpd_id.allowed_product_tmpl_ids",
+        readonly=True,
+    )
+
+    type_master_data = fields.Selection(
+        related="product_tmpl_id.type_master_data",
+        string="Type Master Data",
+        readonly=True,
+    )
 
     @api.depends("qty", "price_unit")
     def _compute_total_price(self):

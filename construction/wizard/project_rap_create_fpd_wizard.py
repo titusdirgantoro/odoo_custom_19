@@ -30,6 +30,23 @@ class ProjectRapCreateFpdWizard(models.TransientModel):
     )
 
     line_ids = fields.One2many("project.rap.create.fpd.wizard.line", "wizard_id", string="Lines", copy=False)
+    allowed_product_tmpl_ids = fields.Many2many(
+        "product.template",
+        string="Allowed Product Templates",
+        compute="_compute_allowed_product_tmpl_ids",
+        compute_sudo=True,
+        help="Template produk yang diizinkan berdasarkan Sub-Pekerjaan.",
+    )
+
+    @api.depends("sub_pekerjaan_id")
+    def _compute_allowed_product_tmpl_ids(self):
+        for wiz in self:
+            tmpl_ids = []
+            sub = wiz.sub_pekerjaan_id
+            if sub:
+                master_lines = wiz._get_sub_master_lines(sub)
+                tmpl_ids = [ml.product_id.id for ml in master_lines if ml.product_id]  # product.template
+            wiz.allowed_product_tmpl_ids = [(6, 0, list(set(tmpl_ids)))] if sub else [(5, 0, 0)]
 
     def _get_sub_master_lines(self, sub):
         sub.ensure_one()
@@ -135,6 +152,7 @@ class ProjectRapCreateFpdWizard(models.TransientModel):
             "res_id": fpd.id,
             "target": "current",
         }
+    
 
 
 class ProjectRapCreateFpdWizardLine(models.TransientModel):
@@ -142,13 +160,21 @@ class ProjectRapCreateFpdWizardLine(models.TransientModel):
     _description = "Create FPD Wizard Line"
 
     wizard_id = fields.Many2one("project.rap.create.fpd.wizard", required=True, ondelete="cascade")
-
+    allowed_product_tmpl_ids = fields.Many2many(
+        "product.template",
+        related="wizard_id.allowed_product_tmpl_ids",
+        readonly=True,
+    )
     product_tmpl_id = fields.Many2one("product.template", string="Product", required=True)
     qty = fields.Float(string="Qty", default=1.0)
     uom_id = fields.Many2one("uom.uom", string="UoM", required=True)
     price_unit = fields.Float(string="Price Unit", default=0.0)
     total_price = fields.Float(string="Total Price", compute="_compute_total_price", store=True)
-
+    type_master_data = fields.Selection(
+        related="product_tmpl_id.type_master_data",
+        string="Type Master Data",
+        readonly=True,
+    )
     @api.depends("qty", "price_unit")
     def _compute_total_price(self):
         for rec in self:

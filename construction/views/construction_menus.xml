@@ -5,7 +5,7 @@
 
         <menuitem
             id="menu_construction_root"
-            name="Aktifitas"
+            name="Aktivitas"
             web_icon="construction,static/description/icon.png"
             sequence="30"
             />

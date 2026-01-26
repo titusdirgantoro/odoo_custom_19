@@ -61,7 +61,7 @@ class PurchaseOrder(models.Model):
                     + list(sub.master_jasa_ids)
                 )
                 tmpl_ids = [ml.product_id.id for ml in all_lines if ml.product_id]
-            order.allowed_product_tmpl_ids = [(6, 0, list(set(tmpl_ids)))]
+            order.allowed_product_tmpl_ids = [(6, 0, list(set(tmpl_ids)))] if sub else [()]
 
     @api.onchange("rap_id")
     def _onchange_rap_id(self):
@@ -90,5 +90,9 @@ class PurchaseOrderLine(models.Model):
     sub_pekerjaan_id = fields.Many2one(
         related="order_id.sub_pekerjaan_id",
         store=True,
+        readonly=True,
+    )
+    allowed_product_tmpl_ids = fields.Many2many(
+        related="order_id.allowed_product_tmpl_ids",
         readonly=True,
     )

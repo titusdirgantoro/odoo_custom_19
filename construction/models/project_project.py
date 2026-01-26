@@ -96,12 +96,22 @@ class ProjectProject(models.Model):
     alamat_pengguna_jasa = fields.Text('Alamat Pengguna Jasa')
     ppn_dipotong = fields.Boolean('Potongan PPN')
     potongan_pph = fields.Float('Potongan PPh (%)')
+    purchase_order_ids = fields.One2many(
+        "purchase.order",
+        "project_id",
+        string="Purchase Orders",
+        readonly=True,
+    )
 
     @api.depends(
         "nilai_kontrak",
         "ppn_dipotong",
         "potongan_pph",
         "rap_id",
+        "purchase_order_ids.state",
+        "purchase_order_ids.invoice_ids.state",
+        "purchase_order_ids.invoice_ids.payment_state",
+        "purchase_order_ids.invoice_ids.amount_untaxed_signed",
     )
     def _compute_construction_finance(self):
         """
@@ -155,12 +165,15 @@ class ProjectProject(models.Model):
 
             # --- Nilai Pek. Kontrak (sum pengeluaran dari PO) ---
             # Catatan: project_id pada PO harus sudah ada & store (related rap_id.project_id) dari implementasi sebelumnya
-            po_domain = [
-                ("project_id", "in", project.ids),
-                ("state", "in", ("purchase", "done")),
-            ]
+            pos = project.purchase_order_ids.filtered(lambda po: po.state in ("purchase", "done"))
+            bills = pos.mapped("invoice_ids").filtered(
+                lambda m: m.state == "posted"
+                and m.move_type in ("in_invoice", "in_refund")
+                and m.payment_state == "paid"
+            )
+
             # pakai amount_untaxed supaya sejajar dengan DPP; kalau mau amount_total tinggal ganti
-            nilai_pekerjaan_kontrak = sum(PurchaseOrder.search(po_domain).mapped("amount_untaxed"))
+            nilai_pekerjaan_kontrak = sum(pos.mapped("amount_total")) if pos else 0
 
             # --- Target RAP ---
             target_rap = (nilai_pekerjaan_rap / dpp) if dpp else 0.0
