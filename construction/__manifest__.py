@@ -60,6 +60,7 @@ khusus untuk kebutuhan konstruksi.
         'wizard/project_rap_import_template_wizard_views.xml',
         'wizard/project_rap_save_as_template_wizard_views.xml',
         'wizard/project_rap_create_fpd_wizard_views.xml',
+        'wizard/project_rap_create_wo_wizard_views.xml',
         
         'views/construction_menus.xml',
     ],

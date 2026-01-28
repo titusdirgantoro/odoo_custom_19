@@ -19,6 +19,7 @@
                         domain="[('pekerjaan_id', '=', pekerjaan_id)]" readonly="1"/>
                 <field name="deliver_to_id" readonly="1"/>
                 <field name="expected_arrival" readonly="1"/>
+                <field name="is_work_order" readonly="1"/>
             </xpath>
             <xpath expr="//field[@name='state']" position="attributes">
                 <attribute name="statusbar_visible">draft,purchase</attribute>

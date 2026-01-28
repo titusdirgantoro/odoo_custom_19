@@ -83,6 +83,10 @@ class ProjectRap(models.Model):
         compute="_compute_total_nilai_pfc",
         store=True,
     )
+    work_order_count = fields.Integer(
+        string="Work Orders",
+        compute="_compute_work_order_count",
+    )
 
     @api.depends("pekerjaan_ids.total_harga", "nilai_kontrak", "type", "name")
     def _compute_total_pfc(self):
@@ -202,7 +206,18 @@ class ProjectRap(models.Model):
     def _compute_purchase_order_count(self):
         PurchaseOrder = self.env["purchase.order"]
         for rec in self:
-            rec.purchase_order_count = PurchaseOrder.search_count([("rap_id", "=", rec.id)])
+            rec.purchase_order_count = PurchaseOrder.search_count([
+                ("rap_id", "=", rec.id),
+                ("is_work_order", "=", False),
+            ])
+
+    def _compute_work_order_count(self):
+        PurchaseOrder = self.env["purchase.order"]
+        for rec in self:
+            rec.work_order_count = PurchaseOrder.search_count([
+                ("rap_id", "=", rec.id),
+                ("is_work_order", "=", True),
+            ])
 
     def action_view_purchase_orders(self):
         self.ensure_one()
@@ -211,13 +226,49 @@ class ProjectRap(models.Model):
             "name": _("Purchase Orders"),
             "res_model": "purchase.order",
             "view_mode": "list,form",
-            "domain": [("rap_id", "=", self.id)],
+            "domain": [("rap_id", "=", self.id), ("is_work_order", "=", False)],
             "context": {
                 "default_rap_id": self.id,
                 "default_project_id": self.project_id.id if self.project_id else False,
             },
             "target": "current",
         }
+
+    def action_open_create_wo_wizard(self):
+        self.ensure_one()
+        if not self.id:
+            raise UserError(_("Silakan simpan dokumen terlebih dahulu."))
+
+        if self.state != "approved":
+            raise UserError(_("WO hanya boleh dibuat saat RAP sudah Approved."))
+
+        return {
+            "type": "ir.actions.act_window",
+            "name": _("Create Work Order"),
+            "res_model": "project.rap.create.wo.wizard",
+            "view_mode": "form",
+            "target": "new",
+            "context": {
+                "default_rap_id": self.id,
+            },
+        }
+        
+    def action_view_work_orders(self):
+        self.ensure_one()
+        return {
+            "type": "ir.actions.act_window",
+            "name": _("Work Orders"),
+            "res_model": "purchase.order",
+            "view_mode": "list,form",
+            "domain": [("rap_id", "=", self.id), ("is_work_order", "=", True)],
+            "context": {
+                "default_rap_id": self.id,
+                "default_project_id": self.project_id.id if self.project_id else False,
+                "default_is_work_order": True,
+            },
+            "target": "current",
+        }
+
 
     @api.constrains("project_id", "type")
     def _check_one_rap_per_project(self):

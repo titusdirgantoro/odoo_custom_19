@@ -64,6 +64,11 @@
                             string="Create Purchase Order"
                             class="btn-primary"
                             invisible="id == False"/>
+                        <button name="action_open_create_wo_wizard"
+                            type="object"
+                            string="Create Work Order"
+                            class="btn-primary"
+                            invisible="id == False"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,request_approval,approved"/>
                     </header>
 
@@ -75,6 +80,13 @@
                                     icon="fa-shopping-cart"
                                     invisible="purchase_order_count == 0">
                                 <field name="purchase_order_count" widget="statinfo" string="Purchase Orders"/>
+                            </button>
+                            <button type="object"
+                                    name="action_view_work_orders"
+                                    class="oe_stat_button"
+                                    icon="fa-wrench"
+                                    invisible="work_order_count == 0">
+                                <field name="work_order_count" widget="statinfo" string="Work Orders"/>
                             </button>
                             <button type="object"
                                     name="action_view_pfcs"
@@ -90,6 +102,7 @@
                                     invisible="fpd_count == 0">
                                 <field name="fpd_count" widget="statinfo" string="FPD"/>
                             </button>
+                            
                         </div>
                         <group>
                             <group>

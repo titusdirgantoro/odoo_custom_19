@@ -1,6 +1,6 @@
 
 from odoo import models, fields, api
-
+from odoo.exceptions import ValidationError
 
 class PurchaseOrder(models.Model):
     _inherit = "purchase.order"
@@ -46,22 +46,50 @@ class PurchaseOrder(models.Model):
         compute_sudo=True,
     )
 
-    @api.depends("sub_pekerjaan_id")
+    is_work_order = fields.Boolean(
+        string="Is Work Order",
+        default=False,
+        index=True,
+        copy=False,
+        help="Jika dicentang, Purchase Order ini dianggap Work Order (WO) dan akan memakai sequence WO.",
+    )
+    
+    @api.model_create_multi
+    def create(self, vals_list):
+        """Jika is_work_order=True, pakai sequence berbeda (purchase.work.order)."""
+        for vals in vals_list:
+            if vals.get("is_work_order"):
+                name = vals.get("name")
+                # Odoo biasanya default 'New'
+                if not name or name == "New" or name == "/":
+                    vals["name"] = self.env["ir.sequence"].next_by_code("purchase.work.order") or "New"
+        return super().create(vals_list)
+    
+    @api.depends("sub_pekerjaan_id", "is_work_order")
     def _compute_allowed_product_tmpl_ids(self):
         for order in self:
-            tmpl_ids = []
             sub = order.sub_pekerjaan_id
+            tmpl_ids = []
+
             if sub:
-                # SAFE: gabung list python, bukan union recordset
-                all_lines = (
-                    list(sub.master_bahan_ids)
-                    + list(sub.master_upah_ids)
-                    + list(sub.master_sewa_alat_ids)
-                    + list(sub.master_overhead_ids)
-                    + list(sub.master_jasa_ids)
+                tmpl_ids = (
+                    sub.master_bahan_ids.mapped("product_id").ids
+                    + sub.master_upah_ids.mapped("product_id").ids
+                    + sub.master_sewa_alat_ids.mapped("product_id").ids
+                    + sub.master_overhead_ids.mapped("product_id").ids
+                    + sub.master_jasa_ids.mapped("product_id").ids
                 )
-                tmpl_ids = [ml.product_id.id for ml in all_lines if ml.product_id]
-            order.allowed_product_tmpl_ids = [(6, 0, list(set(tmpl_ids)))] if sub else [()]
+
+                # WO hanya service
+                if order.is_work_order and tmpl_ids:
+                    tmpl_ids = self.env["product.template"].browse(list(set(tmpl_ids))).filtered(
+                        lambda t: t.type == "service"
+                    ).ids
+
+                order.allowed_product_tmpl_ids = [(6, 0, list(set(tmpl_ids)))]
+            else:
+                # kalau tidak pakai sub_pekerjaan: kosongkan allowed
+                order.allowed_product_tmpl_ids = [()]
 
     @api.onchange("rap_id")
     def _onchange_rap_id(self):
@@ -96,3 +124,12 @@ class PurchaseOrderLine(models.Model):
         related="order_id.allowed_product_tmpl_ids",
         readonly=True,
     )
+    is_work_order = fields.Boolean(related='order_id.is_work_order')
+
+    @api.constrains("product_id")
+    def _check_work_order_service_only(self):
+        for line in self:
+            if line.order_id.is_work_order and line.product_id and line.product_id.type != "service":
+                raise ValidationError(
+                    "Work Order (WO) hanya boleh berisi product type Service."
+                )

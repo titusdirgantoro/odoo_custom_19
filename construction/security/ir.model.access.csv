@@ -37,3 +37,5 @@ access_project_rap_create_po_wizard,project.rap.create.po.wizard user,model_proj
 access_project_rap_create_po_wizard_line,project.rap.create.po.wizard.line user,model_project_rap_create_po_wizard_line,base.group_user,1,1,1,1
 access_project_rap_create_fpd_wizard_user,project.rap.create.fpd.wizard user,model_project_rap_create_fpd_wizard,base.group_user,1,1,1,1
 access_project_rap_create_fpd_wizard_line_user,project.rap.create.fpd.wizard.line user,model_project_rap_create_fpd_wizard_line,base.group_user,1,1,1,1
+access_project_rap_create_wo_wizard,project.rap.create.wo.wizard user,model_project_rap_create_wo_wizard,base.group_user,1,1,1,1
+access_project_rap_create_wo_wizard_line,project.rap.create.wo.wizard.line user,model_project_rap_create_wo_wizard_line,base.group_user,1,1,1,1
