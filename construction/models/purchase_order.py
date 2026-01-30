@@ -1,6 +1,6 @@
 
-from odoo import models, fields, api
-from odoo.exceptions import ValidationError
+from odoo import models, fields, api, _
+from odoo.exceptions import ValidationError, UserError
 
 class PurchaseOrder(models.Model):
     _inherit = "purchase.order"
@@ -53,10 +53,27 @@ class PurchaseOrder(models.Model):
         copy=False,
         help="Jika dicentang, Purchase Order ini dianggap Work Order (WO) dan akan memakai sequence WO.",
     )
+
+    fpd_id = fields.Many2one(
+        "project.fpd",
+        string="FPD",
+        readonly=True,
+        copy=False,
+        index=True,
+    )
     
     @api.model_create_multi
     def create(self, vals_list):
         """Jika is_work_order=True, pakai sequence berbeda (purchase.work.order)."""
+        fpd_ids = [vals.get("fpd_id") for vals in vals_list if vals.get("fpd_id")]
+        if fpd_ids:
+            fpds = self.env["project.fpd"].browse(list(set(fpd_ids)))
+            used = fpds.filtered(lambda f: f.is_used)
+            if used:
+                raise UserError(_(
+                    "FPD berikut sudah pernah digunakan untuk membuat PO/WO dan tidak dapat digunakan lagi:\n- %s"
+                ) % "\n- ".join(used.mapped("display_name")))
+
         for vals in vals_list:
             if vals.get("is_work_order"):
                 name = vals.get("name")
@@ -122,6 +139,11 @@ class PurchaseOrderLine(models.Model):
     )
     allowed_product_tmpl_ids = fields.Many2many(
         related="order_id.allowed_product_tmpl_ids",
+        readonly=True,
+    )
+    type_master_data = fields.Selection(
+        related="product_id.type_master_data",
+        string="Type Master Data",
         readonly=True,
     )
     is_work_order = fields.Boolean(related='order_id.is_work_order')

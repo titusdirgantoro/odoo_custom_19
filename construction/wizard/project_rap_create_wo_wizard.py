@@ -10,17 +10,29 @@ class ProjectRapCreateWoWizard(models.TransientModel):
     _name = "project.rap.create.wo.wizard"
     _description = "Create Work Order (WO) from RAP"
 
+    def _default_warehouse_id(self):
+        return self.env['stock.warehouse'].search(self.env['stock.warehouse']._check_company_domain(self.env.company), limit=1).id
+
     rap_id = fields.Many2one(
         "project.rap",
         string="RAP",
         required=True,
         readonly=True,
+    )  
+    fpd_id = fields.Many2one(
+        "project.fpd",
+        string="FPD",
+        required=True,
+        domain="[('rap_id', '=', rap_id), ('state', '=', 'approve'), ('is_used', '=', False)]",
+        help="FPD yang akan digunakan sebagai sumber lines untuk PO.",
     )
 
     pekerjaan_id = fields.Many2one(
         "project.pekerjaan",
         string="Pekerjaan",
         domain="[('rap_id', '=', rap_id)]",
+        related='fpd_id.pekerjaan_id',
+        store=True
     )
     sub_pekerjaan_id = fields.Many2one(
         "project.sub.pekerjaan",
@@ -28,6 +40,8 @@ class ProjectRapCreateWoWizard(models.TransientModel):
         domain="[('pekerjaan_id', '=', pekerjaan_id)]",
         help="Jika diisi, hanya service yang sesuai sub-pekerjaan yang boleh dipilih. "
              "Jika kosong, semua service boleh dipilih.",
+        related='fpd_id.sub_pekerjaan_id',
+        store=True
     )
 
     partner_id = fields.Many2one(
@@ -39,6 +53,7 @@ class ProjectRapCreateWoWizard(models.TransientModel):
     deliver_to_id = fields.Many2one(
         "stock.warehouse",
         string="Deliver To",
+        default=_default_warehouse_id,
     )
     expected_arrival = fields.Datetime(string="Expected Arrival")
 
@@ -82,90 +97,67 @@ class ProjectRapCreateWoWizard(models.TransientModel):
     # - jika ada sub_pekerjaan: dari master lines sub (service saja)
     # - jika tidak: semua service (purchase_ok=True)
     # =========================================================
-    @api.depends("sub_pekerjaan_id")
+    @api.depends("fpd_id", "fpd_id.line_ids", "fpd_id.line_ids.product_tmpl_id")
     def _compute_allowed_product_ids(self):
         Product = self.env["product.product"]
         for wiz in self:
             products = Product
 
-            if wiz.sub_pekerjaan_id:
-                sub = wiz.sub_pekerjaan_id
-                # kumpulkan semua template dari master lines sub
-                all_lines = (
-                    list(sub.master_bahan_ids)
-                    + list(sub.master_upah_ids)
-                    + list(sub.master_sewa_alat_ids)
-                    + list(sub.master_overhead_ids)
-                    + list(sub.master_jasa_ids)
-                )
-                tmpls = self.env["product.template"].browse([
-                    ml.product_id.id for ml in all_lines if ml.product_id
-                ])
-
-                # filter service saja
-                tmpls = tmpls.filtered(lambda t: t.type == "service")
+            if wiz.fpd_id:
+                tmpls = wiz.fpd_id.line_ids.mapped("product_tmpl_id").filtered(lambda t: t and t.type == "service")
                 products = tmpls.mapped("product_variant_ids")
-
-            else:
-                # semua product service yang boleh dibeli
-                products = Product.search([
-                    ("purchase_ok", "=", True),
-                    ("type", "=", "service"),
-                ])
 
             wiz.allowed_product_ids = products
 
-    # =========================================================
-    # Onchange: sub_pekerjaan -> set pekerjaan + auto-fill lines dari master jasa
-    # =========================================================
-    @api.onchange("sub_pekerjaan_id")
-    def _onchange_sub_pekerjaan_id(self):
+    def _build_wizard_lines_from_fpd(self, fpd):
+        """Return O2M commands untuk line_ids dari FPD (service only)."""
+        fpd.ensure_one()
+
+        items = []
+        for fl in fpd.line_ids:
+            tmpl = fl.product_tmpl_id
+            if not tmpl or tmpl.type != "service":
+                continue
+
+            variant = tmpl.product_variant_id  # asumsi 1 template = 1 variant
+            if not variant:
+                continue
+
+            qty = fl.qty or 0.0
+            price = fl.price_unit or 0.0
+            uom = fl.uom_id or tmpl.uom_id
+
+            if qty <= 0:
+                continue
+
+            items.append((variant.id, uom.id, qty, price))
+
+        commands = [(5, 0, 0)]
+        if not items:
+            return commands
+
+        for product_id, uom_id, qty, price in items:
+            commands.append((0, 0, {
+                "product_id": product_id,
+                "product_uom": uom_id,
+                "product_qty": qty,
+                "price_unit": price,
+            }))
+
+        return commands
+    
+    @api.onchange("fpd_id")
+    def _onchange_fpd_id(self):
         for wiz in self:
-            if wiz.sub_pekerjaan_id:
-                if not wiz.pekerjaan_id:
-                    wiz.pekerjaan_id = wiz.sub_pekerjaan_id.pekerjaan_id
-
-                # auto-fill dari master_jasa_ids (service)
-                commands = [(5, 0, 0)]
-                items = []
-                for ml in wiz.sub_pekerjaan_id.master_jasa_ids:
-                    tmpl = ml.product_id
-                    if not tmpl or tmpl.type != "service":
-                        continue
-                    variant = tmpl.product_variant_id
-                    if not variant:
-                        continue
-
-                    qty = ml.volume or 0.0
-                    price = ml.harga_satuan or 0.0
-                    uom = ml.uom_id or tmpl.uom_id
-
-                    if qty <= 0:
-                        continue
-
-                    items.append((variant.id, uom.id, qty, price))
-
-                # merge produk sama + uom sama
-                merged = {}
-                for product_id, uom_id, qty, price in items:
-                    key = (product_id, uom_id)
-                    if key not in merged:
-                        merged[key] = {"qty": 0.0, "price": price}
-                    merged[key]["qty"] += qty
-                    merged[key]["price"] = price
-
-                for (product_id, uom_id), vals in merged.items():
-                    commands.append((0, 0, {
-                        "product_id": product_id,
-                        "product_uom": uom_id,
-                        "product_qty": vals["qty"],
-                        "price_unit": vals["price"],
-                    }))
-
-                wiz.line_ids = commands
-            else:
-                # jika sub kosong, jangan auto-fill
+            if not wiz.fpd_id:
                 wiz.line_ids = [(5, 0, 0)]
+                return
+
+            # pastikan RAP konsisten
+            if wiz.rap_id and wiz.fpd_id.rap_id and wiz.fpd_id.rap_id != wiz.rap_id:
+                raise UserError(_("FPD yang dipilih tidak sesuai dengan RAP pada wizard."))
+
+            wiz.line_ids = wiz._build_wizard_lines_from_fpd(wiz.fpd_id)
 
     def action_confirm_create_wo(self):
         self.ensure_one()
@@ -184,7 +176,11 @@ class ProjectRapCreateWoWizard(models.TransientModel):
 
         if not self.line_ids:
             raise UserError(_("Lines kosong. Tambahkan minimal 1 line."))
+        if self.fpd_id.state != "approve":
+            raise UserError(_("FPD harus berstatus Approved."))
 
+        if self.fpd_id.rap_id != self.rap_id:
+            raise UserError(_("FPD tidak sesuai dengan RAP."))
         # validasi service-only (double guard)
         for wl in self.line_ids:
             if wl.product_id and wl.product_id.type != "service":
@@ -192,6 +188,7 @@ class ProjectRapCreateWoWizard(models.TransientModel):
 
         po_vals = {
             "partner_id": self.partner_id.id,
+            "fpd_id": self.fpd_id.id,
             "rap_id": self.rap_id.id,
             "pekerjaan_id": self.pekerjaan_id.id if self.pekerjaan_id else False,
             "sub_pekerjaan_id": self.sub_pekerjaan_id.id if self.sub_pekerjaan_id else False,

@@ -10,12 +10,12 @@
           <group>
             <group>
               <field name="rap_id" readonly="1"/>
-              <field name="fpd_id" required="1"/>
+              <field name="fpd_id" required="1" options="{'no_create': True}"/>
             </group>
 
             <group>
               <field name="partner_id" domain="[('supplier_rank', '>', 0)]"/>
-              <field name="deliver_to_id"/>
+              <field name="deliver_to_id" options="{'no_create': True}"/>
               <field name="picking_type_id" invisible="1" force_save="1"/>
               <field name="expected_arrival"/>
             </group>

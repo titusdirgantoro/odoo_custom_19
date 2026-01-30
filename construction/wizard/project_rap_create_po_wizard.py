@@ -16,12 +16,11 @@ class ProjectRapCreatePoWizard(models.TransientModel):
         readonly=True,
     )
 
-    # Source data sekarang dari FPD
     fpd_id = fields.Many2one(
         "project.fpd",
         string="FPD",
         required=True,
-        domain="[('rap_id', '=', rap_id), ('state', 'in', ('approve'))]",
+        domain="[('rap_id', '=', rap_id), ('state', '=', 'approve'), ('is_used', '=', False)]",
         help="FPD yang akan digunakan sebagai sumber lines untuk PO.",
     )
 
@@ -72,9 +71,6 @@ class ProjectRapCreatePoWizard(models.TransientModel):
         help="Produk yang diizinkan berdasarkan FPD Lines terpilih.",
     )
 
-    # =========================================================
-    # Allowed Products: dari FPD Lines
-    # =========================================================
     @api.depends("fpd_id")
     def _compute_allowed_product_ids(self):
         for wiz in self:
@@ -84,9 +80,6 @@ class ProjectRapCreatePoWizard(models.TransientModel):
                 products = tmpls.mapped("product_variant_ids")
             wiz.allowed_product_ids = products
 
-    # =========================================================
-    # Picking type: dari warehouse
-    # =========================================================
     @api.depends("deliver_to_id")
     def _compute_picking_type_id(self):
         for wiz in self:
@@ -96,14 +89,8 @@ class ProjectRapCreatePoWizard(models.TransientModel):
             )
             wiz.picking_type_id = picking_type or False
 
-    # =========================================================
-    # Builder Lines: dari FPD
-    # =========================================================
     def _build_wizard_lines_from_fpd(self, fpd):
-        """Return list of O2M commands untuk field line_ids dari FPD."""
         fpd.ensure_one()
-
-        # tuples: (product_variant_id, uom_id, qty, price_unit)
         items = []
         for fl in fpd.line_ids:
             tmpl = fl.product_tmpl_id
@@ -150,9 +137,6 @@ class ProjectRapCreatePoWizard(models.TransientModel):
 
         return commands
 
-    # =========================================================
-    # Onchange: FPD -> generate lines
-    # =========================================================
     @api.onchange("fpd_id", "use_wizard_lines", "merge_same_product")
     def _onchange_fpd_id(self):
         if not self.use_wizard_lines:
@@ -165,9 +149,6 @@ class ProjectRapCreatePoWizard(models.TransientModel):
 
         self.line_ids = self._build_wizard_lines_from_fpd(self.fpd_id)
 
-    # =========================================================
-    # Action Create PO
-    # =========================================================
     def action_confirm_create_po(self):
         self.ensure_one()
         _logger.info("==== self.picking_type_id %s" % (str(self.picking_type_id)))
@@ -192,6 +173,7 @@ class ProjectRapCreatePoWizard(models.TransientModel):
         # Header PO: ambil pekerjaan/sub dari FPD
         po_vals = {
             "partner_id": self.partner_id.id,
+            "fpd_id": self.fpd_id.id,
             "rap_id": self.rap_id.id,
             "fpd_id": self.fpd_id.id if "fpd_id" in self.env["purchase.order"]._fields else False,
             "pekerjaan_id": self.fpd_id.pekerjaan_id.id if "pekerjaan_id" in self.env["purchase.order"]._fields else False,
@@ -200,7 +182,6 @@ class ProjectRapCreatePoWizard(models.TransientModel):
             "expected_arrival": self.expected_arrival,
         }
 
-        # bersihkan key False agar tidak error create bila field tidak ada
         po_vals = {k: v for k, v in po_vals.items() if v is not False}
 
         po = self.env["purchase.order"].create(po_vals)
@@ -228,7 +209,6 @@ class ProjectRapCreatePoWizard(models.TransientModel):
                     "name": wl.name or wl.product_id.display_name,
                 })
         else:
-            # langsung ambil dari FPD lines
             for fl in self.fpd_id.line_ids:
                 tmpl = fl.product_tmpl_id
                 if not tmpl:

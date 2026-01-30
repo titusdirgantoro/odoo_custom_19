@@ -55,6 +55,24 @@ class ProjectFpd(models.Model):
         compute_sudo=True,
         help="Template produk yang diizinkan berdasarkan Sub-Pekerjaan.",
     )
+    purchase_order_ids = fields.One2many(
+        "purchase.order",
+        "fpd_id",
+        string="Purchase Orders",
+        readonly=True,
+    )
+
+    is_used = fields.Boolean(
+        string="Already Used",
+        compute="_compute_is_used",
+        store=True,
+        help="Tercentang jika FPD sudah pernah dipakai untuk membuat PO/WO.",
+    )
+
+    @api.depends("purchase_order_ids")
+    def _compute_is_used(self):
+        for rec in self:
+            rec.is_used = bool(rec.purchase_order_ids.filtered(lambda po: po.state != "cancel"))
 
     @api.depends("sub_pekerjaan_id")
     def _compute_allowed_product_tmpl_ids(self):

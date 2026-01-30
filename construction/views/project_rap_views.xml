@@ -58,17 +58,18 @@
                         <button name="action_create_fpd"
                                 type="object"
                                 string="Create FPD"
+                                invisible="state != 'approved' or id == False"
                                 class="oe_highlight"/>
                         <button name="action_open_create_po_wizard"
                             type="object"
                             string="Create Purchase Order"
                             class="btn-primary"
-                            invisible="id == False"/>
+                            invisible="state != 'approved' or id == False"/>
                         <button name="action_open_create_wo_wizard"
                             type="object"
                             string="Create Work Order"
                             class="btn-primary"
-                            invisible="id == False"/>
+                            invisible="state != 'approved' or id == False"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,request_approval,approved"/>
                     </header>
 
